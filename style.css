@@ -3412,30 +3412,63 @@ body.menu-open #controls {
 }
 
 /* ============================================================
-   MOBILE-FIRST FINAL — NÃO MEXER NA FÍSICA DO PLAYER
-   A hitbox e o bottom do #player continuam exatamente como o JS espera.
-   Só o desenho da personagem é redimensionado no ::after.
+   VIEWPORT VIRTUAL FINAL
+   O jogo inteiro trabalha sempre em 1600 x 720.
+   Em qualquer tela, ele só é REDIMENSIONADO COMO UM TODO.
+   Física, hitboxes e sprites continuam nas medidas originais.
 ============================================================ */
 
-html,
-body,
-#game,
-#world {
-  height: 100dvh;
+:root {
+  --game-scale: 1;
+  --game-center-x: 50vw;
+  --game-center-y: 50vh;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #05070d;
+}
+
+/* ---------- GAMEPLAY ---------- */
+
+#game {
+  position: fixed !important;
+
+  left: var(--game-center-x) !important;
+  top: var(--game-center-y) !important;
+
+  width: 1600px !important;
+  height: 720px !important;
+
+  transform:
+    translate(-50%, -50%)
+    scale(var(--game-scale)) !important;
+
+  transform-origin: center center !important;
+
+  overflow: hidden !important;
+}
+
+/* O mundo conserva TODAS as coordenadas originais. */
+#world {
+  width: 9000px !important;
+  height: 720px !important;
+}
+
+/* Cenários usam a altura virtual, não a altura real do celular. */
 .area,
 #nightToDay,
 #dayArea,
 #dayToSunset {
-  height: 100dvh;
+  height: 720px !important;
 }
 
-/* ---------- PERSONAGEM PRINCIPAL ----------
-   Física e sprite mantidos na escala original do jogo.
-*/
+/* A personagem volta 100% para a regra original.
+   Nenhum scale individual. */
 #player {
-  position: absolute;
   width: 350px !important;
   height: 400px !important;
 
@@ -3444,366 +3477,127 @@ body,
   background-repeat: no-repeat !important;
   background-position: center bottom !important;
 
+  scale: 1 !important;
   margin: 0 !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-
-  z-index: 20;
 }
 
 #player::after {
   content: none !important;
 }
 
-/* ---------- HUD / CONTROLES ---------- */
-
-#counter {
-  top: max(8px, env(safe-area-inset-top));
-  left: max(8px, env(safe-area-inset-left));
-
-  padding:
-    clamp(5px, 1.2dvh, 8px)
-    clamp(9px, 1.4vw, 15px);
-
-  font-size: clamp(15px, 3dvh, 25px);
+/* Não escala obstáculos individualmente. */
+.log,
+.rock,
+.crate,
+#bounceMushroom,
+.floating-crate,
+#pushableCrate,
+#returnCrate,
+#puzzleLedge,
+#riverLog,
+#risingPlatform,
+.temporary-platform,
+#movingCloud,
+.sunflower,
+#secretKey,
+.bird,
+.checkpoint,
+#floorButton,
+#temporaryButton,
+#finalButton,
+#finalDoor {
+  scale: 1 !important;
 }
 
-#controls {
-  bottom: max(8px, env(safe-area-inset-bottom));
-
-  padding-left:
-    max(10px, env(safe-area-inset-left));
-
-  padding-right:
-    max(10px, env(safe-area-inset-right));
-}
-
-.left-controls {
-  gap: clamp(8px, 1.5vw, 15px);
-}
-
-#controls button {
-  width: clamp(48px, 10dvh, 65px);
-  height: clamp(48px, 10dvh, 65px);
-
-  font-size: clamp(18px, 4dvh, 26px);
-}
-
-/* ---------- TELA INICIAL ---------- */
-
-#startScreen {
-  min-height: 100dvh;
-  padding: clamp(8px, 2dvh, 24px);
-}
-
-#startCard {
-  width: min(820px, 92vw);
-
-  min-height: 0 !important;
-  height: min(470px, 86dvh);
-  max-height: 86dvh;
-}
-
-.startCharacterSide {
-  min-height: 0 !important;
-  height: 100%;
-}
-
-#mainCharacterCard img {
-  width: clamp(175px, 42dvh, 340px);
-  max-height: 92%;
-
-  object-fit: contain;
-
-  bottom: clamp(-38px, -5dvh, -16px);
-}
-
-.clickHint {
-  bottom: clamp(7px, 2dvh, 18px);
-
-  padding:
-    clamp(4px, .9dvh, 7px)
-    clamp(7px, 1vw, 11px);
-
-  font-size: clamp(9px, 1.9dvh, 13px);
-}
-
-.startMenuSide {
-  padding:
-    clamp(14px, 5dvh, 56px)
-    clamp(18px, 4vw, 58px)
-    clamp(14px, 5dvh, 56px)
-    clamp(14px, 2.5vw, 35px);
-}
-
-.startMenuSide h1 {
-  margin-bottom: clamp(12px, 4dvh, 36px);
-
-  font-size: clamp(28px, 8dvh, 70px);
-}
-
-.startButtons {
-  gap: clamp(6px, 1.5dvh, 12px);
-}
-
-.startButtons button {
-  min-height: clamp(34px, 7dvh, 53px);
-
-  padding:
-    clamp(6px, 1.4dvh, 12px)
-    clamp(10px, 1.5vw, 20px);
-
-  font-size: clamp(11px, 2.4dvh, 16px);
-}
-
-.startButtons .mainStartBtn {
-  min-height: clamp(40px, 8dvh, 64px);
-  font-size: clamp(13px, 2.8dvh, 19px);
-}
-
-/* ---------- POPUPS ---------- */
-
-.menuPopup {
-  padding: clamp(8px, 2dvh, 22px);
-  overflow-y: auto;
-}
-
-.popupBox {
-  max-height: 88dvh;
-  overflow-y: auto;
-
-  padding: clamp(16px, 4dvh, 34px);
-}
-
-.popupBox h2 {
-  margin-bottom: clamp(12px, 3dvh, 24px);
-
-  font-size: clamp(22px, 4.5dvh, 30px);
-}
-
-.characterProfileCard {
-  min-height: 0;
-
-  grid-template-columns:
-    clamp(85px, 19dvh, 145px)
-    1fr;
-
-  gap: clamp(8px, 1.5vw, 14px);
-
-  padding: clamp(10px, 2.4dvh, 18px);
-}
-
-.characterProfileCard img {
-  width: clamp(85px, 19dvh, 145px);
-  max-height: 38dvh;
-}
-
-.characterProfileCard img[alt="Nati"] {
-  width: clamp(65px, 14dvh, 105px);
-}
-
-.characterProfileCard h3 {
-  margin-bottom: clamp(7px, 1.7dvh, 15px);
-
-  font-size: clamp(18px, 3.7dvh, 27px);
-}
-
-.characterProfileCard p {
-  font-size: clamp(11px, 2.15dvh, 16px);
-}
-
-.howToContent {
-  gap: clamp(7px, 1.8dvh, 13px);
-
-  font-size: clamp(12px, 2.4dvh, 17px);
-}
-
-.smallProfile {
-  grid-template-columns:
-    clamp(90px, 22dvh, 180px)
-    1fr;
-
-  gap: clamp(12px, 2.5vw, 26px);
-}
-
-.profileSprite {
-  width: clamp(90px, 22dvh, 180px);
-}
-
-/* ---------- MISSÃO ---------- */
-
-#missionScreen {
-  min-height: 100dvh;
-
-  padding: clamp(8px, 2dvh, 20px);
-
-  overflow-y: auto;
-}
-
-.missionBox {
-  width: min(560px, 88vw);
-  max-height: 88dvh;
-
-  overflow-y: auto;
-
-  padding:
-    clamp(12px, 3.7dvh, 38px)
-    clamp(14px, 3vw, 34px);
-}
-
-.missionMini {
-  font-size: clamp(8px, 1.8dvh, 12px);
-}
-
-.missionBox h2 {
-  margin:
-    clamp(3px, 1dvh, 8px)
-    0
-    clamp(5px, 1.5dvh, 12px);
-
-  font-size: clamp(20px, 5dvh, 34px);
-}
-
-.missionIntro {
-  margin-bottom: clamp(8px, 2.5dvh, 28px);
-
-  font-size: clamp(11px, 2.35dvh, 16px);
-}
-
-.missionGoals {
-  gap: clamp(6px, 1.6dvh, 12px);
-
-  margin-bottom: clamp(9px, 2.6dvh, 30px);
-}
-
-.missionGoal {
-  gap: clamp(8px, 1.5vw, 14px);
-
-  padding:
-    clamp(6px, 1.6dvh, 13px)
-    clamp(9px, 1.5vw, 15px);
-}
-
-.missionGoal span {
-  font-size: clamp(17px, 3.6dvh, 25px);
-}
-
-.missionGoal p {
-  font-size: clamp(11px, 2.2dvh, 15px);
-  line-height: 1.25;
-}
-
-#beginAdventureBtn {
-  padding: clamp(8px, 1.8dvh, 15px);
-
-  font-size: clamp(11px, 2.3dvh, 16px);
-}
-
-/* ---------- PRAIA ---------- */
-
+/* ---------- PRAIA ----------
+   Mesma resolução virtual do gameplay.
+*/
 #beachScene {
-  min-height: 100dvh;
+  inset: auto !important;
+
+  left: var(--game-center-x) !important;
+  top: var(--game-center-y) !important;
+
+  width: 1600px !important;
+  height: 720px !important;
+
+  transform:
+    translate(-50%, -50%)
+    scale(var(--game-scale)) !important;
+
+  transform-origin: center center !important;
 }
 
+/* Neutraliza os @media antigos da praia.
+   A escala agora acontece no cenário inteiro. */
 #beachPlayer {
-  width: clamp(185px, 45dvh, 330px) !important;
-
-  bottom: clamp(-40px, -5dvh, -22px) !important;
-}
-
-#natCharacter {
-  width: clamp(145px, 34dvh, 255px) !important;
-
-  bottom: clamp(-32px, -4dvh, -17px) !important;
-}
-
-#natSpeech {
-  bottom: clamp(145px, 35dvh, 265px) !important;
-
-  padding:
-    clamp(6px, 1.3dvh, 10px)
-    clamp(9px, 1.5vw, 16px) !important;
-
-  font-size: clamp(12px, 2.45dvh, 17px) !important;
+  left: 8% !important;
+  bottom: -52px !important;
+  width: 360px !important;
 }
 
 #beachCounter {
-  top: max(8px, env(safe-area-inset-top));
-  left: max(8px, env(safe-area-inset-left));
-
-  padding:
-    clamp(5px, 1.1dvh, 9px)
-    clamp(8px, 1.5vw, 15px);
-
-  font-size: clamp(13px, 2.6dvh, 20px);
+  top: 22px !important;
+  left: 22px !important;
+  font-size: 20px !important;
 }
 
 #beachIntro {
-  top: clamp(6%, 10dvh, 18%) !important;
-
-  max-width: min(430px, 72vw) !important;
-
-  padding:
-    clamp(6px, 1.4dvh, 9px)
-    clamp(9px, 1.5vw, 14px) !important;
-
-  font-size: clamp(12px, 2.4dvh, 17px) !important;
+  top: 18% !important;
+  max-width: 430px !important;
+  font-size: 17px !important;
+  padding: 9px 14px !important;
 }
 
 #flowerDropBox {
-  bottom: clamp(58px, 15dvh, 105px);
-
-  width: clamp(72px, 14dvh, 115px);
-  height: clamp(52px, 10dvh, 82px);
+  left: 66% !important;
+  bottom: 105px !important;
+  width: 115px !important;
+  height: 82px !important;
 }
 
-.dropHint {
-  font-size: clamp(20px, 4dvh, 31px);
+#natCharacter {
+  width: 270px !important;
+  bottom: -35px !important;
+}
+
+#natSpeech {
+  bottom: 275px !important;
+  font-size: 17px !important;
 }
 
 #finalBouquet,
 #finalBouquet.held {
-  width: clamp(235px, 54dvh, 470px) !important;
-
-  bottom: clamp(52px, 12dvh, 90px) !important;
+  width: min(500px, 48vw) !important;
+  bottom: 90px !important;
 }
 
-/* mensagem final */
+/* ---------- MENSAGEM FINAL ---------- */
+
 #finalThankYou {
-  position: fixed;
+  position: absolute;
 
   left: 50%;
-  top: clamp(4%, 6.5dvh, 9%);
+  top: 8%;
 
-  transform:
-    translate(-50%, 8px);
+  transform: translate(-50%, 8px);
 
-  width: min(420px, 72vw);
+  width: 430px;
+  max-width: 72%;
 
-  padding:
-    clamp(6px, 1.3dvh, 11px)
-    clamp(10px, 1.7vw, 20px);
-
-  background:
-    rgba(8, 12, 35, .40);
-
-  border:
-    1px solid
-    rgba(255,255,255,.18);
-
-  border-radius: 12px;
+  padding: 10px 18px;
 
   color: white;
-
   text-align: center;
 
-  font:
-    clamp(12px, 2.3dvh, 16px) /
-    1.4
-    Arial, sans-serif;
+  font: 16px/1.4 Arial, sans-serif;
+
+  background: rgba(8,12,35,.40);
+
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
 
   opacity: 0;
-
   pointer-events: none;
 
   z-index: 40;
@@ -3815,9 +3609,7 @@ body,
 
 #finalThankYou.show {
   opacity: 1;
-
-  transform:
-    translate(-50%, 0);
+  transform: translate(-50%, 0);
 }
 
 #finalThankYou p {
@@ -3829,248 +3621,6 @@ body,
   color: #fff1c4;
 }
 
-#backToStartBtn {
-  bottom:
-    max(
-      8px,
-      env(safe-area-inset-bottom)
-    );
-
-  padding:
-    clamp(7px, 1.4dvh, 10px)
-    clamp(11px, 1.6vw, 18px);
-
-  font-size: clamp(12px, 2.3dvh, 16px);
-}
-
-/* ---------- CELULAR EM PÉ ---------- */
-
-@media (orientation: portrait) and (max-width: 700px) {
-
-  #startCard {
-    height: min(720px, 90dvh);
-
-    grid-template-columns: 1fr;
-    grid-template-rows: 50% 50%;
-  }
-
-  #mainCharacterCard img {
-    width: clamp(170px, 30dvh, 245px);
-  }
-
-  .startMenuSide {
-    text-align: center;
-  }
-
-  .characterGrid {
-    grid-template-columns: 1fr;
-
-    max-height: 66dvh;
-
-    overflow-y: auto;
-  }
-
-  .smallProfile {
-    grid-template-columns:
-      clamp(85px, 17dvh, 120px)
-      1fr;
-  }
-}
-
-/* ---------- CELULAR / TABLET DEITADO ---------- */
-
-@media (orientation: landscape) and (max-height: 650px) {
-
-  #startCard {
-    width: min(760px, 90vw);
-    height: 82dvh;
-  }
-
-  .missionBox {
-    width: min(620px, 78vw);
-    max-height: 84dvh;
-  }
-
-  .charactersBox {
-    width: min(760px, 88vw);
-  }
-
-  .characterGrid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-
-
-/* ============================================================
-   AJUSTE FINAL SEGURO — mantém a escala do print de referência
-============================================================ */
-@media (orientation: landscape) and (max-height: 650px) {
-  .sunflower {
-    font-size: 43px !important;
-  }
-}
-
-/* ============================================================
-   MOBILE GAMEPLAY PROPORCIONAL
-   Cenário fica 100%.
-   Sprites + obstáculos + hitboxes ficam ~70%.
-============================================================ */
-
-@media (orientation: landscape) and (max-height: 700px) {
-
-  /* Sarah: a caixa física continua no mesmo lugar.
-     O ponto de escala é exatamente nos pés lógicos (150px). */
-  #player {
-    scale: .70 !important;
-    transform-origin: center calc(100% - 150px) !important;
-  }
-
-  /* plataformas normais */
-  .log {
-    width: 210px !important;
-    height: 84px !important;
-    transform: translateY(13px) !important;
-  }
-
-  .rock {
-    width: 126px !important;
-    height: 105px !important;
-    transform: translateY(13px) !important;
-  }
-
-  .crate {
-    width: 91px !important;
-    height: 91px !important;
-    transform: translateY(8px) !important;
-  }
-
-  /* cogumelo */
-  #bounceMushroom {
-    width: 91px !important;
-    height: 84px !important;
-  }
-
-  /* caixas flutuantes */
-  .floating-crate {
-    width: 77px !important;
-    height: 77px !important;
-  }
-
-  /* caixotes */
-  #pushableCrate,
-  #returnCrate {
-    width: 91px !important;
-    height: 91px !important;
-  }
-
-  /* paredão */
-  #puzzleLedge {
-    width: 182px !important;
-    height: 182px !important;
-  }
-
-  /* tronco do rio */
-  #riverLog {
-    width: 133px !important;
-    height: 53px !important;
-  }
-
-  /* plataforma que sobe */
-  #risingPlatform {
-    width: 154px !important;
-    height: 39px !important;
-  }
-
-  /* plataformas temporárias */
-  .temporary-platform {
-    width: 105px !important;
-    height: 25px !important;
-  }
-
-  /* botões físicos do mapa */
-  #floorButton,
-  #temporaryButton {
-    scale: .70 !important;
-    transform-origin: left bottom !important;
-  }
-
-  #finalButton {
-    scale: .70 !important;
-    transform-origin: left bottom !important;
-  }
-
-  #finalDoor {
-    scale: .78 !important;
-    transform-origin: center bottom !important;
-  }
-
-  /* coletáveis / inimigos / decoração interativa */
-  .sunflower {
-    font-size: 38px !important;
-  }
-
-  #secretKey {
-    width: 46px !important;
-  }
-
-  .bird {
-    width: 41px !important;
-    height: 34px !important;
-    font-size: 31px !important;
-  }
-
-  .checkpoint {
-    scale: .78 !important;
-    transform-origin: center bottom !important;
-  }
-
-  #birdWarning {
-    scale: .78 !important;
-    transform-origin: left bottom !important;
-  }
-
-  /* Nuvem: menor visualmente, mas não mexe na posição do vão */
-  #movingCloud {
-    width: 168px !important;
-    height: 84px !important;
-  }
-}
-
-/* ============================================================
-   CORREÇÃO ANDROID / CHROME — ALTURA DO JOGO
-   Volta à mesma referência vertical que funcionava antes.
-============================================================ */
-
-#game,
-#world,
-.area,
-#nightToDay,
-#dayArea,
-#dayToSunset {
-  height: 100vh !important;
-  min-height: 0 !important;
-}
-
-#world {
-  top: 0 !important;
-  bottom: auto !important;
-}
-
-#ground {
-  bottom: 0 !important;
-}
-
-/* no gameplay, não usar dvh: em Chrome Android deitado
-   ele estava colocando o chão abaixo da área visível */
-@media (orientation: landscape) and (max-height: 700px) {
-  #game,
-  #world,
-  .area,
-  #nightToDay,
-  #dayArea,
-  #dayToSunset {
-    height: 100vh !important;
-  }
-}
+/* Menu inicial e missão continuam responsivos no tamanho REAL da tela.
+   Eles NÃO fazem parte do viewport virtual. */
 
