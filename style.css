@@ -3900,13 +3900,41 @@ body,
   }
 }
 
-
-
 /* ============================================================
-   AJUSTE FINAL SEGURO — mantém a escala do print de referência
+   CÂMERA MOBILE — escala o jogo inteiro proporcionalmente
+   Mantém física, hitboxes e tamanhos relativos intactos.
 ============================================================ */
+
 @media (orientation: landscape) and (max-height: 650px) {
-  .sunflower {
-    font-size: 43px !important;
+  :root {
+    --game-mobile-scale: 0.72;
+  }
+
+  #world {
+    width: calc(9000px / var(--game-mobile-scale)) !important;
+    height: calc(100dvh / var(--game-mobile-scale)) !important;
+
+    transform: scale(var(--game-mobile-scale));
+    transform-origin: left bottom;
+  }
+
+  /* Os cenários precisam preencher a altura "virtual" antes da escala. */
+  .area,
+  #nightToDay,
+  #dayArea,
+  #dayToSunset {
+    height: calc(100dvh / var(--game-mobile-scale)) !important;
+  }
+
+  /* HUD e controles ficam fora do zoom e continuam legíveis. */
+  #counter {
+    font-size: 18px !important;
+  }
+
+  #controls button {
+    width: 58px !important;
+    height: 58px !important;
+    font-size: 22px !important;
   }
 }
+
