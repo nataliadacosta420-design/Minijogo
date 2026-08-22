@@ -3432,24 +3432,23 @@ body,
 }
 
 /* ---------- PERSONAGEM PRINCIPAL ----------
-   Mantém exatamente a caixa e o posicionamento que a física do JS espera.
-   Só reduz um pouco a IMAGEM dentro dela; não muda bottom/height/hitbox.
+   Física e sprite mantidos na escala original do jogo.
 */
 #player {
+  position: absolute;
   width: 350px !important;
   height: 400px !important;
 
-  margin: 0 !important;
-
   background-image: url("personagem.png") !important;
+  background-size: contain !important;
   background-repeat: no-repeat !important;
   background-position: center bottom !important;
 
-  /* menor que no PC, sem deslocar os pés */
-  background-size: clamp(245px, 62dvh, 350px) auto !important;
-
+  margin: 0 !important;
   opacity: 1 !important;
   visibility: visible !important;
+
+  z-index: 20;
 }
 
 #player::after {
@@ -3904,27 +3903,10 @@ body,
 
 
 /* ============================================================
-   AJUSTE VISUAL FINAL DO MAPA NO CELULAR
-   Não altera posição nem hitbox dos objetos.
+   AJUSTE FINAL SEGURO — mantém a escala do print de referência
 ============================================================ */
-
-@media (max-width: 900px) {
-  /* Girassóis coletáveis não ficam do tamanho da personagem */
+@media (orientation: landscape) and (max-height: 650px) {
   .sunflower {
-    font-size: clamp(30px, 7dvh, 43px) !important;
-  }
-
-  /* Chave também acompanha a escala visual */
-  #secretKey {
-    width: clamp(42px, 9dvh, 58px) !important;
-  }
-
-  /* checkpoints e aves um pouco menores */
-  .checkpoint {
-    font-size: clamp(26px, 6dvh, 34px) !important;
-  }
-
-  .bird {
-    font-size: clamp(30px, 7dvh, 40px) !important;
+    font-size: 43px !important;
   }
 }
