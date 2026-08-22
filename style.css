@@ -3454,3 +3454,45 @@ body.menu-open #controls {
 #finalThankYou p:last-child {
   color: #fff1c4;
 }
+/* =========================
+   AJUSTE DO JOGO NO CELULAR
+========================= */
+
+@media (max-width: 700px) {
+
+  /* personagem principal */
+  #player {
+    width: 220px !important;
+    height: 255px !important;
+    bottom: -35px !important;
+  }
+
+  /* personagem na praia */
+  #beachPlayer {
+    width: 220px !important;
+  }
+
+  /* Nati na praia */
+  #natCharacter {
+    width: 190px !important;
+  }
+
+  /* buquê final */
+  #finalBouquet {
+    width: min(290px, 46vw) !important;
+  }
+
+  /* HUD menor */
+  #counter {
+    font-size: 17px !important;
+    top: 10px !important;
+    left: 10px !important;
+  }
+
+  /* controles menores */
+  #controls button {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 20px !important;
+  }
+}
