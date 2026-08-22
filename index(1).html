@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Jogo dos Girassóis</title>
+
+  <link rel="stylesheet" href="style(1).css">
+</head>
+
+<body>
+
+<div id="game">
+
+  <div id="counter">🌻 0/12 &nbsp; 🔑 0</div>
+
+  <div id="world">
+
+    <!-- =====================
+         CENÁRIOS
+    ====================== -->
+
+    <div id="nightArea" class="area"></div>
+
+    <div id="nightToDay">
+      <div class="transition-night"></div>
+      <div class="transition-day"></div>
+    </div>
+
+    <div id="dayArea" class="area"></div>
+
+    <div id="dayToSunset">
+      <div class="transition-day-bg"></div>
+      <div class="transition-sunset"></div>
+    </div>
+
+    <div id="sunsetArea" class="area"></div>
+
+
+    <!-- =====================
+         VAGA-LUMES
+    ====================== -->
+
+    <span class="firefly" style="left:500px; bottom:330px;"></span>
+    <span class="firefly" style="left:650px; bottom:250px;"></span>
+    <span class="firefly" style="left:850px; bottom:390px;"></span>
+    <span class="firefly" style="left:1050px; bottom:280px;"></span>
+    <span class="firefly" style="left:1320px; bottom:350px;"></span>
+    <span class="firefly" style="left:1700px; bottom:320px;"></span>
+    <span class="firefly" style="left:1950px; bottom:400px;"></span>
+
+
+    <!-- =====================
+         NOITE
+    ====================== -->
+
+    <div
+      class="platform log"
+      data-x="1100"
+      style="left:1100px;">
+    </div>
+
+    <div
+      class="platform rock"
+      data-x="1800"
+      style="left:1800px;">
+    </div>
+
+
+    <!-- COGUMELO -->
+
+    <div
+      id="bounceMushroom"
+      data-x="2050"
+      style="left:2050px;">
+    </div>
+
+
+    <div
+      class="platform crate"
+      data-x="2450"
+      style="left:2450px;">
+    </div>
+
+
+    <!-- =====================
+         CAIXOTES DA CHAVE
+    ====================== -->
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="2800"
+      style="left:2800px;">
+    </div>
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="2920"
+      style="left:2920px;">
+    </div>
+
+    <div
+      id="specialCrate"
+      class="floating-crate special-crate"
+      data-x="3040"
+      style="left:3040px;">
+    </div>
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="3160"
+      style="left:3160px;">
+    </div>
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="3280"
+      style="left:3280px;">
+    </div>
+
+
+    <img
+      id="secretKey"
+      src="chave.png"
+      alt=""
+      draggable="false"
+    >
+
+
+    <!-- =====================
+         DIA
+    ====================== -->
+
+    <div
+      class="platform crate"
+      data-x="3500"
+      style="left:3500px;">
+    </div>
+
+
+    <!-- CAIXOTE EMPURRÁVEL -->
+
+    <div
+      id="pushableCrate"
+      data-x="3850">
+    </div>
+
+
+    <!-- PLATAFORMA ALTA DO PUZZLE -->
+
+    <div
+      id="puzzleLedge"
+      data-x="4200"
+      style="left:4200px;">
+    </div>
+
+
+    <!-- CAIXOTE FIXO PARA VOLTAR DO PAREDÃO -->
+
+    <div
+      id="returnCrate"
+      data-x="4480"
+      style="left:4480px;">
+    </div>
+
+
+    <!-- =====================
+         RIO
+    ====================== -->
+
+    <div
+      class="river"
+      data-x="4700"
+      data-width="430"
+      style="left:4700px; width:430px;">
+    </div>
+
+
+    <!-- TRONCO NO RIO -->
+
+    <div
+      id="riverLog"
+      data-x="4825"
+      style="left:4825px;">
+    </div>
+
+
+    <div
+      class="platform rock"
+      data-x="5250"
+      style="left:5250px;">
+    </div>
+
+
+    <!-- =====================
+         MOITA SECRETA
+    ====================== -->
+
+    <div
+      id="secretBush"
+      data-x="5750"
+      style="left:5750px;">
+
+      <span id="secretSunflower">🌻</span>
+
+    </div>
+
+
+    <!-- =====================
+         PÔR DO SOL
+    ====================== -->
+
+    <div
+      class="platform rock"
+      data-x="6500"
+      style="left:6500px;">
+    </div>
+
+
+    <!-- BOTÃO -->
+
+    <div
+      id="floorButton"
+      data-x="6800"
+      style="left:6800px;">
+    </div>
+
+
+    <!-- PLATAFORMA MÓVEL -->
+
+    <div
+      id="risingPlatform"
+      data-x="7050"
+      style="left:7050px;">
+    </div>
+
+
+    <div
+      class="platform crate"
+      data-x="7400"
+      style="left:7400px;">
+    </div>
+
+
+    <!-- DESAFIO DAS PLATAFORMAS TEMPORÁRIAS -->
+
+    <div
+      id="temporaryButton"
+      data-x="7850"
+      style="left:7850px;">
+    </div>
+
+    <div class="temporary-platform" data-x="7970" data-bottom="175" style="left:7970px; bottom:175px;"></div>
+    <div class="temporary-platform" data-x="8170" data-bottom="260" style="left:8170px; bottom:260px;"></div>
+    <div class="temporary-platform" data-x="8370" data-bottom="345" style="left:8370px; bottom:345px;"></div>
+
+
+   <!-- CHECKPOINT 1 -->
+
+<div
+  class="checkpoint"
+  data-x="2350"
+  style="left:2350px;">
+  🚩
+</div>
+
+
+<!-- CHECKPOINT 2 -->
+
+<div
+  class="checkpoint"
+  data-x="5400"
+  style="left:5400px;">
+  🚩
+</div>
+
+
+<!-- CHECKPOINT 3 -->
+
+<div
+  class="checkpoint"
+  data-x="8200"
+  style="left:8200px;">
+  🚩
+</div>
+    <!-- =====================
+         GIRASSÓIS
+    ====================== -->
+
+    <div
+      class="sunflower"
+      data-x="700"
+      data-y="100"
+      style="left:700px; bottom:100px;">
+      🌻
+    </div>
+
+    <div
+      class="sunflower"
+      data-x="1220"
+      data-y="205"
+      style="left:1220px; bottom:205px;">
+      🌻
+    </div>
+
+    <div
+      class="sunflower"
+      data-x="1860"
+      data-y="250"
+      style="left:1860px; bottom:250px;">
+      🌻
+    </div>
+
+
+    <!-- COGUMELO NECESSÁRIO -->
+
+    <div
+      class="sunflower"
+      data-x="2110"
+      data-y="475"
+      style="left:2110px; bottom:475px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="3400"
+      data-y="100"
+      style="left:3400px; bottom:100px;">
+      🌻
+    </div>
+
+
+    <!-- PUZZLE DO CAIXOTE -->
+
+    <div
+      class="sunflower"
+      data-x="4280"
+      data-y="350"
+      style="left:4280px; bottom:350px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="5300"
+      data-y="260"
+      style="left:5300px; bottom:260px;">
+      🌻
+    </div>
+
+    <div
+      id="runnerSunflower"
+      class="sunflower runner-sunflower"
+      data-x="6000"
+      data-y="100"
+      style="left:6000px; bottom:100px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="6250"
+      data-y="100"
+      style="left:6250px; bottom:100px;">
+      🌻
+    </div>
+
+
+    <!-- PLATAFORMA QUE SOBE -->
+
+    <div
+      class="sunflower"
+      data-x="7110"
+      data-y="470"
+      style="left:7110px; bottom:470px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="7470"
+      data-y="245"
+      style="left:7470px; bottom:245px;">
+      🌻
+    </div>
+
+    <div
+      class="sunflower"
+      data-x="8450"
+      data-y="455"
+      style="left:8450px; bottom:455px;">
+      🌻
+    </div>
+
+
+    <!-- =====================
+         BURACOS
+    ====================== -->
+
+    <div
+      class="hole"
+      data-x="1500"
+      data-width="140"
+      style="left:1500px; width:140px;">
+    </div>
+
+    <div
+      class="hole"
+      data-x="7600"
+      data-width="220"
+      style="left:7600px; width:220px;">
+    </div>
+
+
+    <!-- CHÃO -->
+
+    <div id="ground"></div>
+
+
+    <!-- PERSONAGEM -->
+
+    <div id="player"></div>
+
+  </div>
+
+
+  <div id="runMessage">CORRE! 🌻</div>
+
+  <!-- =====================
+       CONTROLES
+  ====================== -->
+
+  <div id="controls">
+
+    <div class="left-controls">
+
+      <button id="leftBtn">◀</button>
+
+      <button id="rightBtn">▶</button>
+
+    </div>
+
+    <button id="jumpBtn">▲</button>
+
+  </div>
+
+</div>
+
+
+<script src="game.js"></script>
+
+</body>
+</html>

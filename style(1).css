@@ -1,0 +1,1015 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  background: #111;
+}
+
+
+/* =====================
+   JOGO
+===================== */
+
+#game {
+  width: 100vw;
+  height: 100vh;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background: #111;
+}
+
+
+/* =====================
+   MUNDO
+===================== */
+
+#world {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 9000px;
+  height: 100vh;
+}
+
+
+/* =====================
+   CENÁRIOS
+===================== */
+
+.area {
+  position: absolute;
+
+  top: 0;
+
+  height: 100vh;
+
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  background-position: center bottom;
+
+  z-index: 0;
+}
+
+
+/* NOITE */
+
+#nightArea {
+  left: 0;
+
+  width: 2500px;
+
+  background-image: url("noite.png");
+}
+
+
+/* TRANSIÇÃO */
+
+#nightToDay {
+  position: absolute;
+
+  left: 2500px;
+  top: 0;
+
+  width: 1000px;
+  height: 100vh;
+
+  z-index: 0;
+}
+
+.transition-night,
+.transition-day {
+  position: absolute;
+
+  inset: 0;
+
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  background-position: center bottom;
+}
+
+
+.transition-night {
+  background-image: url("noite.png");
+
+  mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent
+    );
+}
+
+
+.transition-day {
+  background-image: url("dia.png");
+
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      black
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      black
+    );
+}
+
+
+/* DIA */
+
+#dayArea {
+  position: absolute;
+
+  left: 3500px;
+  top: 0;
+
+  width: 2000px;
+  height: 100vh;
+
+  background-image: url("dia.png");
+
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  background-position: center bottom;
+}
+
+
+/* DIA → PÔR DO SOL */
+
+#dayToSunset {
+  position: absolute;
+
+  left: 5500px;
+  top: 0;
+
+  width: 1000px;
+  height: 100vh;
+
+  z-index: 0;
+}
+
+
+.transition-day-bg,
+.transition-sunset {
+  position: absolute;
+
+  inset: 0;
+
+  background-size: auto 100%;
+  background-repeat: repeat-x;
+  background-position: center bottom;
+}
+
+
+.transition-day-bg {
+  background-image: url("dia.png");
+
+  mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent
+    );
+}
+
+
+.transition-sunset {
+  background-image: url("cenario.png");
+
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      black
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent,
+      black
+    );
+}
+
+
+/* PÔR DO SOL */
+
+#sunsetArea {
+  left: 6500px;
+
+  width: 2500px;
+
+  background-image: url("cenario.png");
+}
+
+
+/* =====================
+   CHÃO
+===================== */
+
+#ground {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 9000px;
+  height: 90px;
+
+  background: #5a3b22;
+
+  border-top:
+    18px solid #6f8f3a;
+
+  z-index: 2;
+}
+
+
+/* =====================
+   PERSONAGEM
+===================== */
+
+#player {
+  position: absolute;
+
+  left: 60px;
+  bottom: -60px;
+
+  width: 350px;
+  height: 400px;
+
+  background-image:
+    url("personagem.png");
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+
+  z-index: 20;
+}
+
+
+/* =====================
+   PLATAFORMAS
+===================== */
+
+.platform {
+  position: absolute;
+
+  bottom: 90px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+
+  z-index: 5;
+}
+
+
+.log {
+  width: 300px;
+  height: 120px;
+
+  background-image:
+    url("tronco.png");
+
+  transform:
+    translateY(18px);
+}
+
+
+.rock {
+  width: 180px;
+  height: 150px;
+
+  background-image:
+    url("pedra.png");
+
+  transform:
+    translateY(18px);
+}
+
+
+.crate {
+  width: 130px;
+  height: 130px;
+
+  background-image:
+    url("caixote.png");
+
+  transform:
+    translateY(12px);
+}
+
+
+/* =====================
+   COGUMELO
+===================== */
+
+#bounceMushroom {
+  position: absolute;
+
+  bottom: 90px;
+
+  width: 130px;
+  height: 120px;
+
+  background-image:
+    url("cogumelo.png");
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+
+  image-rendering: pixelated;
+
+  z-index: 12;
+}
+
+
+#bounceMushroom.bounce {
+  animation:
+    mushroomBounce 0.25s ease;
+}
+
+
+@keyframes mushroomBounce {
+
+  0% {
+    transform: scale(1);
+  }
+
+  40% {
+    transform:
+      scaleX(1.15)
+      scaleY(0.65);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+
+}
+
+
+/* =====================
+   CAIXOTES FLUTUANTES
+===================== */
+
+.floating-crate {
+  position: absolute;
+
+  bottom: 270px;
+
+  width: 110px;
+  height: 110px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  image-rendering: pixelated;
+
+  z-index: 8;
+}
+
+
+.normal-crate {
+  background-image:
+    url("normal.png");
+}
+
+
+.special-crate {
+  background-image:
+    url("especial.png");
+
+  filter:
+    drop-shadow(
+      0 0 7px
+      rgba(255,215,70,0.7)
+    );
+}
+
+
+.special-crate.hit {
+  animation:
+    specialHit 0.25s;
+}
+
+
+@keyframes specialHit {
+
+  50% {
+    transform:
+      translateY(-12px);
+  }
+
+}
+
+
+/* =====================
+   CHAVE
+===================== */
+
+#secretKey {
+  position: absolute;
+
+  width: 65px;
+
+  opacity: 0;
+
+  z-index: 15;
+
+  pointer-events: none;
+
+  image-rendering: pixelated;
+}
+
+
+#secretKey.revealed {
+  opacity: 1;
+
+  animation:
+    keyFloat 1s ease-in-out infinite;
+}
+
+
+#secretKey.collected {
+  display: none;
+}
+
+
+@keyframes keyFloat {
+
+  50% {
+    transform:
+      translateY(-10px);
+  }
+
+}
+
+
+/* =====================
+   CAIXOTE EMPURRÁVEL
+===================== */
+
+#pushableCrate {
+  position: absolute;
+
+  left: 3850px;
+  bottom: 90px;
+
+  width: 130px;
+  height: 130px;
+
+  background-image:
+    url("normal.png");
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+
+  image-rendering: pixelated;
+
+  z-index: 8;
+}
+
+
+/* PLATAFORMA ALTA */
+
+#puzzleLedge {
+  position: absolute;
+
+  bottom: 90px;
+
+  width: 260px;
+  height: 260px;
+
+  background: #5a3b22;
+
+  border-top: 18px solid #6f8f3a;
+
+  z-index: 5;
+}
+
+
+/* =====================
+   RIO
+===================== */
+
+.river {
+  position: absolute;
+
+  bottom: 0;
+
+  height: 108px;
+
+  background: #4d9ed1;
+
+  border-top: 18px solid #7bd0ed;
+
+  z-index: 3;
+
+  /* impede as ondinhas de vazarem */
+  overflow: hidden;
+}
+
+
+.river::after {
+  content: "";
+
+  position: absolute;
+
+  top: 35px;
+  left: 0;
+
+  width: 200%;
+  height: 5px;
+
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(255,255,255,.55) 0 20px,
+      transparent 20px 45px
+    );
+
+  animation: riverMove 2s linear infinite;
+}
+
+
+@keyframes riverMove {
+
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100px);
+  }
+
+}
+
+
+/* =====================
+   TRONCO DO RIO
+===================== */
+
+#riverLog {
+  position: absolute;
+
+  bottom: 105px;
+
+  width: 190px;
+  height: 75px;
+
+  background-image:
+    url("tronco.png");
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  z-index: 8;
+}
+
+
+/* =====================
+   GIRASSÓIS
+===================== */
+
+.sunflower {
+  position: absolute;
+
+  font-size: 55px;
+
+  z-index: 10;
+}
+
+
+/* =====================
+   MOITA SECRETA
+===================== */
+
+#secretBush {
+  position: absolute;
+
+  bottom: 90px;
+
+  width: 220px;
+  height: 110px;
+
+  z-index: 9;
+
+  background:
+    radial-gradient(circle at 20% 65%, #3f8746 0 32%, transparent 33%),
+    radial-gradient(circle at 38% 45%, #4d9c52 0 34%, transparent 35%),
+    radial-gradient(circle at 56% 55%, #397940 0 36%, transparent 37%),
+    radial-gradient(circle at 74% 42%, #4a934e 0 32%, transparent 33%),
+    radial-gradient(circle at 88% 68%, #35733b 0 28%, transparent 29%);
+
+  filter:
+    drop-shadow(0 5px 0 rgba(0,0,0,0.18));
+}
+
+
+/* folhinhas de baixo */
+
+#secretBush::before {
+  content: "";
+
+  position: absolute;
+
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+
+  height: 42px;
+
+  background:
+    repeating-linear-gradient(
+      120deg,
+      #2f6836 0 12px,
+      #3e7e43 12px 24px
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      5% 45%,
+      12% 78%,
+      20% 28%,
+      28% 72%,
+      38% 20%,
+      48% 70%,
+      58% 25%,
+      68% 72%,
+      78% 30%,
+      87% 75%,
+      95% 40%,
+      100% 100%
+    );
+}
+
+
+/* flor escondida */
+
+#secretSunflower {
+  position: absolute;
+
+  left: 82px;
+  bottom: 35px;
+
+  font-size: 50px;
+
+  opacity: 0;
+
+  transform:
+    translateY(20px)
+    scale(0.7);
+
+  transition:
+    0.35s ease;
+
+  z-index: 10;
+}
+
+
+#secretBush.discovered
+#secretSunflower {
+  opacity: 1;
+
+  transform:
+    translateY(-50px)
+    scale(1);
+}
+
+
+/* =====================
+   BOTÃO
+===================== */
+
+#floorButton {
+  position: absolute;
+
+  bottom: 90px;
+
+  width: 85px;
+  height: 22px;
+
+  background:
+    #ddbd46;
+
+  border:
+    5px solid #72521c;
+
+  z-index: 8;
+
+  transition:
+    0.15s;
+}
+
+
+#floorButton.pressed {
+  height: 10px;
+
+  background:
+    #ffe36e;
+}
+
+
+/* =====================
+   PLATAFORMA MÓVEL
+===================== */
+
+#risingPlatform {
+  position: absolute;
+
+  bottom: 90px;
+
+  width: 220px;
+  height: 55px;
+
+  background:
+    #654329;
+
+  border-top:
+    12px solid #78984b;
+
+  z-index: 7;
+}
+
+
+/* =====================
+   CHECKPOINT
+===================== */
+
+.checkpoint {
+  position: absolute;
+
+  bottom: 90px;
+
+  width: 55px;
+  height: 100px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-size: 36px;
+
+  opacity: 0.45;
+
+  z-index: 6;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+
+/* checkpoint ativado */
+
+.checkpoint.active {
+  opacity: 1;
+
+  transform: scale(1.15);
+
+  filter:
+    drop-shadow(
+      0 0 7px
+      rgba(255, 220, 80, 0.8)
+    );
+}
+
+/* =====================
+   VAGA-LUMES
+===================== */
+
+.firefly {
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background:
+    #ffe66d;
+
+  box-shadow:
+    0 0 7px #ffe66d,
+    0 0 15px #ffe66d;
+
+  z-index: 4;
+
+  animation:
+    fireflyMove
+    2s ease-in-out
+    infinite alternate;
+}
+
+
+@keyframes fireflyMove {
+
+  from {
+    margin-top: -8px;
+  }
+
+  to {
+    margin-top: 8px;
+  }
+
+}
+
+
+/* =====================
+   BURACOS
+===================== */
+
+.hole {
+  position: absolute;
+
+  bottom: 0;
+
+  height: 110px;
+
+  background:
+    #080808;
+
+  z-index: 3;
+}
+
+
+/* =====================
+   HUD
+===================== */
+
+#counter {
+  position: fixed;
+
+  top: 20px;
+  left: 20px;
+
+  padding:
+    8px 15px;
+
+  background:
+    rgba(0,0,0,.4);
+
+  color: white;
+
+  border-radius:
+    12px;
+
+  font:
+    25px Arial;
+
+  z-index: 1000;
+}
+
+
+/* =====================
+   CONTROLES
+===================== */
+
+#controls {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 20px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  padding:
+    0 25px;
+
+  pointer-events: none;
+
+  z-index: 1000;
+}
+
+
+.left-controls {
+  display: flex;
+
+  gap: 15px;
+}
+
+
+#controls button {
+  width: 65px;
+  height: 65px;
+
+  border:
+    2px solid
+    rgba(255,255,255,.5);
+
+  border-radius: 50%;
+
+  background:
+    rgba(0,0,0,.3);
+
+  color: white;
+
+  font-size: 26px;
+
+  pointer-events: auto;
+
+  touch-action: none;
+
+  user-select: none;
+}
+
+/* =====================
+   NOVAS INTERAÇÕES
+===================== */
+
+#returnCrate {
+  position: absolute;
+  bottom: 90px;
+  width: 130px;
+  height: 130px;
+  background-image: url("normal.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  image-rendering: pixelated;
+  z-index: 8;
+}
+
+.runner-sunflower {
+  transition: left .35s ease, transform .2s ease;
+}
+.runner-sunflower.scared { animation: sunflowerScared .22s ease; }
+@keyframes sunflowerScared {
+  25% { transform: rotate(-12deg); }
+  50% { transform: rotate(12deg); }
+  75% { transform: rotate(-8deg); }
+}
+
+#temporaryButton {
+  position: absolute; bottom: 90px; width: 90px; height: 22px;
+  background: #d8bb4d; border: 5px solid #76541e;
+  border-radius: 8px 8px 2px 2px; z-index: 8; transition: .15s;
+}
+#temporaryButton.pressed { height: 10px; background: #ffe66d; }
+.temporary-platform {
+  position: absolute; width: 150px; height: 35px;
+  background: #68472d; border-top: 10px solid #7d9c4b; border-radius: 5px;
+  z-index: 8; opacity: 0; transform: scale(0); pointer-events: none;
+}
+.temporary-platform.active { opacity: 1; transform: scale(1); pointer-events: auto; animation: platformAppear .25s ease; }
+@keyframes platformAppear { from { opacity:0; transform:scale(.3); } to { opacity:1; transform:scale(1); } }
+.temporary-platform.warning { animation: platformWarning .25s linear infinite; }
+@keyframes platformWarning { 50% { opacity:.25; } }
+#runMessage {
+  position: fixed; left:50%; top:30%; transform:translate(-50%,-50%) scale(.5);
+  font: bold 48px Arial; color:white; text-shadow:0 3px 0 #66451e,0 0 15px rgba(255,225,80,.8);
+  opacity:0; pointer-events:none; z-index:2000;
+}
+#runMessage.show { animation: runMessage 1s ease forwards; }
+@keyframes runMessage {
+  0% { opacity:0; transform:translate(-50%,-50%) scale(.4); }
+  20% { opacity:1; transform:translate(-50%,-50%) scale(1.15); }
+  75% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  100% { opacity:0; transform:translate(-50%,-70%) scale(1); }
+}

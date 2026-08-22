@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Jogo dos Girassóis</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="menu-open">
+
+  <!-- =====================
+       TELA INICIAL
+  ====================== -->
+  <div id="startScreen">
+    <div id="startCard">
+      <div class="startDecor decor1">✦</div>
+      <div class="startDecor decor2">✦</div>
+      <div class="startDecor decor3">♡</div>
+
+      <div class="startCharacterSide">
+        <button id="mainCharacterCard" type="button" aria-label="Ver perfil da Sarah">
+          <img src="personagem.png" alt="Sarah">
+          <span class="clickHint">clique nela ✦</span>
+        </button>
+      </div>
+
+      <div class="startMenuSide">
+        <h1>MINI JOGO</h1>
+
+        <div class="startButtons">
+          <button id="startGameBtn" class="mainStartBtn" type="button">
+            INICIAR
+          </button>
+
+          <button id="howToPlayBtn" type="button">
+            COMO JOGAR
+          </button>
+
+          <button id="charactersBtn" type="button">
+            PERSONAGENS
+          </button>
+        </div>
+      </div>
+    </div>
+<!-- PERFIL RÁPIDO SARAH -->
+    <div id="sarahQuickProfile" class="menuPopup">
+      <div class="popupBox smallProfile">
+        <button class="popupClose" data-close-popup type="button">×</button>
+
+        <img src="personagem.png" alt="Sarah" class="profileSprite">
+
+        <div class="profileText">
+          <span class="tinyLabel">nome oficial</span>
+          <h2>Sarah</h2>
+
+          <span class="tinyLabel">apelido</span>
+          <p>Coisinha</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMO JOGAR -->
+    <div id="howToPlayPopup" class="menuPopup">
+      <div class="popupBox">
+        <button class="popupClose" data-close-popup type="button">×</button>
+
+        <h2>Como jogar</h2>
+
+        <div class="howToContent">
+          <p><strong>← →</strong> para andar</p>
+          <p><strong>↑ </strong> para pular</p>
+          <p>Explore o mapa, pegue os itens e cuidado com os obstáculos.</p>
+          <p>Algumas coisas só aparecem quando você descobre o que fazer.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERSONAGENS -->
+    <div id="charactersPopup" class="menuPopup">
+      <div class="popupBox charactersBox">
+        <button class="popupClose" data-close-popup type="button">×</button>
+
+        <h2>Personagens</h2>
+
+        <div class="characterGrid">
+          <div class="characterProfileCard">
+            <img src="personagem.png" alt="Sarah">
+
+            <div>
+              <span class="tinyLabel">nome oficial</span>
+              <h3>Sarah</h3>
+
+              <span class="tinyLabel">apelido</span>
+              <p>Coisinha</p>
+
+              <span class="tinyLabel">descrição</span>
+              <p>linda, engraçada, inteligente, majestosa, charmosa, delicada, gostosa, incrivel, criativa, uma princesa, minha princesa.</p>
+            </div>
+          </div>
+
+          <div class="characterProfileCard">
+            <img src="personagem2.png" alt="Nati">
+
+            <div>
+              <span class="tinyLabel">nome</span>
+              <h3>Nati</h3>
+
+              <span class="tinyLabel">descrição</span>
+              <p>sortuda.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- TELA DA MISSÃO -->
+<div id="missionScreen">
+  <div class="missionBox">
+
+    <span class="missionMini">antes de começar...</span>
+
+    <h2>SUA MISSÃO</h2>
+
+    <p class="missionIntro">
+      Você precisa chegar até o final do caminho.
+    </p>
+
+    <div class="missionGoals">
+
+      <div class="missionGoal">
+        <span>🌻</span>
+        <p>Colete os <strong>13 girassóis</strong></p>
+      </div>
+
+      <div class="missionGoal">
+        <span>🔑</span>
+        <p>Encontre a <strong>chave</strong></p>
+      </div>
+
+      <div class="missionGoal">
+        <span>✦</span>
+        <p>Descubra o que está te esperando no final.</p>
+      </div>
+
+    </div>
+
+    <button id="beginAdventureBtn">
+      COMEÇAR A AVENTURA →
+    </button>
+
+  </div>
+</div>
+
+<div id="game">
+
+  <div id="counter">🌻 0/13 &nbsp; 🔑 0</div>
+
+  <div id="world">
+
+    <!-- =====================
+         CENÁRIOS
+    ====================== -->
+
+    <div id="nightArea" class="area"></div>
+
+    <div id="nightToDay">
+      <div class="transition-night"></div>
+      <div class="transition-day"></div>
+    </div>
+
+    <div id="dayArea" class="area"></div>
+
+    <div id="dayToSunset">
+      <div class="transition-day-bg"></div>
+      <div class="transition-sunset"></div>
+    </div>
+
+    <div id="sunsetArea" class="area"></div>
+
+
+    <!-- =====================
+         VAGA-LUMES
+    ====================== -->
+
+    <span class="firefly" style="left:500px; bottom:330px;"></span>
+    <span class="firefly" style="left:650px; bottom:250px;"></span>
+    <span class="firefly" style="left:850px; bottom:390px;"></span>
+    <span class="firefly" style="left:1050px; bottom:280px;"></span>
+    <span class="firefly" style="left:1320px; bottom:350px;"></span>
+    <span class="firefly" style="left:1700px; bottom:320px;"></span>
+    <span class="firefly" style="left:1950px; bottom:400px;"></span>
+
+    <!-- AVISO DOS PÁSSAROS -->
+
+<div
+  id="birdWarning"
+  style="left:3550px;">
+  ⚠ Cuidado<br>
+  com os pássaros!
+</div>
+    <!-- =====================
+         AVES / INIMIGOS
+    ====================== -->
+
+    <div
+      class="bird"
+      data-start="3600"
+      data-range="340"
+      data-speed="1.4"
+      data-bottom="390"
+      style="left:3600px; bottom:390px;">
+      🐦
+    </div>
+
+    <div
+      class="bird"
+      data-start="6100"
+      data-range="420"
+      data-speed="1.8"
+      data-bottom="330"
+      style="left:6100px; bottom:330px;">
+      🐦
+    </div>
+
+    <div
+      class="bird"
+      data-start="7350"
+      data-range="330"
+      data-speed="2.1"
+      data-bottom="410"
+      style="left:7350px; bottom:410px;">
+      🐦
+    </div>
+
+
+    <!-- =====================
+         NOITE
+    ====================== -->
+
+    <div
+      class="platform log"
+      data-x="1100"
+      style="left:1100px;">
+    </div>
+
+    <div
+      class="platform rock"
+      data-x="1800"
+      style="left:1800px;">
+    </div>
+
+
+    <!-- COGUMELO -->
+
+    <div
+      id="bounceMushroom"
+      data-x="2050"
+      style="left:2050px;">
+    </div>
+
+
+    <div
+      class="platform crate"
+      data-x="2450"
+      style="left:2450px;">
+    </div>
+
+
+    <!-- =====================
+         CAIXOTES DA CHAVE
+    ====================== -->
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="2800"
+      style="left:2800px;">
+    </div>
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="2920"
+      style="left:2920px;">
+    </div>
+
+    <div
+      id="specialCrate"
+      class="floating-crate special-crate"
+      data-x="3040"
+      style="left:3040px;">
+    </div>
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="3160"
+      style="left:3160px;">
+    </div>
+
+    <div
+      class="floating-crate normal-crate"
+      data-x="3280"
+      style="left:3280px;">
+    </div>
+
+
+    <img
+      id="secretKey"
+      src="chave.png"
+      alt=""
+      draggable="false"
+    >
+
+
+    <!-- =====================
+         DIA
+    ====================== -->
+
+    <div
+      class="platform crate"
+      data-x="3500"
+      style="left:3500px;">
+    </div>
+
+
+    <!-- CAIXOTE EMPURRÁVEL -->
+
+    <div
+      id="pushableCrate"
+      data-x="3850">
+    </div>
+
+
+    <!-- PLATAFORMA ALTA DO PUZZLE -->
+
+    <div
+      id="puzzleLedge"
+      data-x="4200"
+      style="left:4200px;">
+    </div>
+
+
+    <!-- CAIXOTE FIXO PARA VOLTAR DO PAREDÃO -->
+
+    <div
+      id="returnCrate"
+      data-x="4480"
+      style="left:4480px;">
+    </div>
+
+
+    <!-- =====================
+         RIO
+    ====================== -->
+
+    <div
+      class="river"
+      data-x="4700"
+      data-width="430"
+      style="left:4700px; width:430px;">
+    </div>
+
+
+    <!-- TRONCO NO RIO -->
+
+    <div
+      id="riverLog"
+      data-x="4825"
+      style="left:4825px;">
+    </div>
+
+
+    <div
+      class="platform rock"
+      data-x="5250"
+      style="left:5250px;">
+    </div>
+
+<!-- =====================
+     NUVEM MÓVEL
+===================== -->
+
+<div
+  id="movingCloud"
+  data-start="5380"
+  data-range="170"
+  style="left:5380px;">
+</div>
+
+
+<!-- GIRASSOL DA NUVEM -->
+
+<div
+  class="sunflower"
+  data-x="5485"
+  data-y="390"
+  style="left:5485px; bottom:390px;">
+  🌻
+</div>
+    <!-- =====================
+         MOITA SECRETA
+    ====================== -->
+
+    <div
+      id="secretBush"
+      data-x="5750"
+      style="left:5750px;">
+
+      <span id="secretSunflower">🌻</span>
+
+    </div>
+
+
+    <!-- =====================
+         PÔR DO SOL
+    ====================== -->
+
+    <div
+      class="platform rock"
+      data-x="6500"
+      style="left:6500px;">
+    </div>
+
+
+    <!-- BOTÃO -->
+
+    <div
+      id="floorButton"
+      data-x="6800"
+      style="left:6800px;">
+    </div>
+
+
+    <!-- PLATAFORMA MÓVEL -->
+
+    <div
+      id="risingPlatform"
+      data-x="7050"
+      style="left:7050px;">
+    </div>
+
+
+    <div
+      class="platform crate"
+      data-x="7400"
+      style="left:7400px;">
+    </div>
+
+
+    <!-- DESAFIO DAS PLATAFORMAS TEMPORÁRIAS -->
+
+    <div
+      id="temporaryButton"
+      data-x="7850"
+      style="left:7850px;">
+    </div>
+
+    <div class="temporary-platform" data-x="7970" data-bottom="175" style="left:7970px; bottom:175px;"></div>
+    <div class="temporary-platform" data-x="8170" data-bottom="260" style="left:8170px; bottom:260px;"></div>
+    <div class="temporary-platform" data-x="8370" data-bottom="345" style="left:8370px; bottom:345px;"></div>
+
+
+   <!-- CHECKPOINT 1 -->
+
+<div
+  class="checkpoint"
+  data-x="2350"
+  style="left:2350px;">
+  🚩
+</div>
+
+
+<!-- CHECKPOINT 2 -->
+
+<div
+  class="checkpoint"
+  data-x="5160"
+  style="left:5160px;">
+  🚩
+</div>
+
+
+<!-- CHECKPOINT 3 -->
+
+<div
+  class="checkpoint"
+  data-x="8200"
+  style="left:8200px;">
+  🚩
+</div>
+    <!-- =====================
+         GIRASSÓIS
+    ====================== -->
+
+    <div
+      class="sunflower"
+      data-x="700"
+      data-y="100"
+      style="left:700px; bottom:100px;">
+      🌻
+    </div>
+
+    <div
+      class="sunflower"
+      data-x="1220"
+      data-y="205"
+      style="left:1220px; bottom:205px;">
+      🌻
+    </div>
+
+    <div
+      class="sunflower"
+      data-x="1860"
+      data-y="250"
+      style="left:1860px; bottom:250px;">
+      🌻
+    </div>
+
+
+    <!-- COGUMELO NECESSÁRIO -->
+
+    <div
+      class="sunflower"
+      data-x="2110"
+      data-y="475"
+      style="left:2110px; bottom:475px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="3400"
+      data-y="100"
+      style="left:3400px; bottom:100px;">
+      🌻
+    </div>
+
+
+    <!-- PUZZLE DO CAIXOTE -->
+
+    <div
+      class="sunflower"
+      data-x="4280"
+      data-y="350"
+      style="left:4280px; bottom:350px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="5300"
+      data-y="260"
+      style="left:5300px; bottom:260px;">
+      🌻
+    </div>
+
+    <div
+      id="runnerSunflower"
+      class="sunflower runner-sunflower"
+      data-x="6000"
+      data-y="100"
+      style="left:6000px; bottom:100px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="6250"
+      data-y="100"
+      style="left:6250px; bottom:100px;">
+      🌻
+    </div>
+
+
+    <!-- PLATAFORMA QUE SOBE -->
+
+    <div
+      class="sunflower"
+      data-x="7110"
+      data-y="470"
+      style="left:7110px; bottom:470px;">
+      🌻
+    </div>
+
+
+    <div
+      class="sunflower"
+      data-x="7470"
+      data-y="245"
+      style="left:7470px; bottom:245px;">
+      🌻
+    </div>
+
+    <div
+      class="sunflower"
+      data-x="8450"
+      data-y="455"
+      style="left:8450px; bottom:455px;">
+      🌻
+    </div>
+
+
+
+    <!-- =====================
+         FINAL DA FASE
+    ====================== -->
+
+    <!-- aparece somente depois de pegar todos os girassóis -->
+    <div
+      id="finalButton"
+      style="left:8700px;">
+    </div>
+
+    <!-- fica em cima da última plataforma temporária -->
+    <div
+      id="finalDoor"
+      style="left:8390px; bottom:380px;">
+    </div>
+
+
+    <!-- =====================
+         BURACOS
+    ====================== -->
+
+
+    <!-- VÃO DA NUVEM -->
+    <div
+      class="hole cloud-gap"
+      data-x="5380"
+      data-width="360"
+      style="left:5380px; width:360px;">
+    </div>
+
+    <div
+      class="hole"
+      data-x="1500"
+      data-width="140"
+      style="left:1500px; width:140px;">
+    </div>
+
+    <div
+      class="hole"
+      data-x="7600"
+      data-width="220"
+      style="left:7600px; width:220px;">
+    </div>
+
+
+    <!-- CHÃO -->
+
+    <div id="ground"></div>
+
+
+    <!-- PERSONAGEM -->
+
+    <div id="player"></div>
+
+  </div>
+
+
+  <div id="runMessage">CORRE! 🌻</div>
+
+
+  <div id="doorMessage"></div>
+
+  <div id="doorFade">
+    <div id="doorFadeText"></div>
+  </div>
+
+  <!-- =====================
+       CONTROLES
+  ====================== -->
+
+  <div id="controls">
+
+    <div class="left-controls">
+
+      <button id="leftBtn">◀</button>
+
+      <button id="rightBtn">▶</button>
+
+    </div>
+
+    <button id="jumpBtn">▲</button>
+
+  </div>
+
+</div>
+  <!-- PRAIA FINAL -->
+  <section id="beachScene">
+    <div id="cinematicShade"></div>
+    <img id="beachPlayer" src="personagem.png" alt="">
+    
+
+    <div id="beachCounter">
+      🌻 <span id="beachFlowerCount">0</span>
+      &nbsp;&nbsp;
+      🔑 <span id="beachKeyCount">0</span>
+    </div>
+
+    <div id="beachIntro">
+      <span>Clique na caixa para colocar os girassóis 🌻</span>
+    </div>
+
+    <div id="flowerDropBox" role="button" aria-label="Colocar os girassóis na caixa" tabindex="0">
+      <div class="dropBoxLid"></div>
+      <div class="dropBoxBody"></div>
+      <span class="dropHint">🌻</span>
+    </div>
+
+    <!-- NAT -->
+    <img id="natCharacter" src="personagem2.png" alt=""> 
+
+    <div id="natSpeech">
+      Isso é pra você.
+    </div>
+
+    <!-- BUQUÊ: salve a imagem escolhida como buque.png -->
+    <img id="finalBouquet" src="buque.png" alt="Buquê de girassóis">
+    <div id="finalThankYou">
+  <p>obrigada por existir.</p>
+  <p>você me faz feliz. ♡</p>
+</div>
+
+    <div id="beachMessage"></div>
+
+    <button id="backToStartBtn" type="button">
+      ↩ Voltar ao início
+    </button>
+  </section>
+  <script src="game.js"></script>
+
+
+
+
+</body>
+</html>
