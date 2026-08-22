@@ -3819,3 +3819,23 @@ body.menu-open #controls {
     grid-template-columns: 1fr 1fr;
   }
 }
+/* CORREÇÃO MOBILE: mantém a Sarah visível no chão */
+
+@media (max-width: 900px) {
+
+  #player {
+    width: 260px !important;
+    height: 300px !important;
+
+    background-size: contain !important;
+    background-position: center bottom !important;
+
+    /*
+      O JS continua usando bottom:-60px.
+      Isso puxa só a IMAGEM visualmente pra cima
+      sem alterar a física do jogo.
+    */
+    margin-bottom: 42px !important;
+  }
+
+}
