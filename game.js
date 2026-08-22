@@ -132,6 +132,31 @@ const bodyRightOffset = 225;
 
 const feetOffsetY = 150;
 
+/* Escala proporcional do gameplay no celular deitado.
+   O cenário continua 100%; personagem, obstáculos e hitboxes
+   ficam menores juntos, mantendo os pés no mesmo chão. */
+const mobileGameplay =
+  window.matchMedia(
+    "(orientation: landscape) and (max-height: 700px)"
+  ).matches;
+
+const mobileGameplayScale =
+  mobileGameplay ? 0.70 : 1;
+
+const bodyCenterOffset = 175;
+const bodyHalfWidth =
+  50 * mobileGameplayScale;
+
+const effectiveBodyLeftOffset =
+  bodyCenterOffset - bodyHalfWidth;
+
+const effectiveBodyRightOffset =
+  bodyCenterOffset + bodyHalfWidth;
+
+const effectiveBodyHeight =
+  120 * mobileGameplayScale;
+
+
 
 /* =====================
    ESTADO
@@ -254,16 +279,16 @@ function playerBox(
   return {
 
     left:
-      x + bodyLeftOffset,
+      x + effectiveBodyLeftOffset,
 
     right:
-      x + bodyRightOffset,
+      x + effectiveBodyRightOffset,
 
     bottom:
       y + feetOffsetY,
 
     top:
-      y + feetOffsetY + 120
+      y + feetOffsetY + effectiveBodyHeight
 
   };
 
@@ -427,14 +452,14 @@ function platformBox(el) {
     Number(el.dataset.x);
 
 
-  let height = 115;
+  let height = 115 * mobileGameplayScale;
 
 
   if (
     el.classList.contains("log")
   ) {
 
-    height = 55;
+    height = 55 * mobileGameplayScale;
 
   }
 
@@ -443,7 +468,7 @@ function platformBox(el) {
     el.classList.contains("rock")
   ) {
 
-    height = 100;
+    height = 100 * mobileGameplayScale;
 
   }
 
@@ -481,11 +506,12 @@ function floatingBox(el) {
     left: x,
 
     right:
-      x + 110,
+      x + (110 * mobileGameplayScale),
 
     bottom: 270,
 
-    top: 380
+    top:
+      270 + (110 * mobileGameplayScale)
 
   };
 
@@ -502,11 +528,13 @@ function puzzleBox() {
 
     left: 4200,
 
-    right: 4460,
+    right:
+      4200 + (260 * mobileGameplayScale),
 
     bottom: 90,
 
-    top: 350
+    top:
+      groundTop + (260 * mobileGameplayScale)
 
   };
 
@@ -525,13 +553,13 @@ function pushableBox() {
       pushableX,
 
     right:
-      pushableX + 130,
+      pushableX + (130 * mobileGameplayScale),
 
     bottom:
       groundTop,
 
     top:
-      groundTop + 115
+      groundTop + (115 * mobileGameplayScale)
 
   };
 
@@ -548,13 +576,14 @@ function returnCrateBox() {
 
     left: 4480,
 
-    right: 4610,
+    right:
+      4480 + (130 * mobileGameplayScale),
 
     bottom:
       groundTop,
 
     top:
-      groundTop + 115
+      groundTop + (115 * mobileGameplayScale)
 
   };
 
@@ -579,12 +608,12 @@ function temporaryPlatformBox(el) {
     left: x,
 
     right:
-      x + 150,
+      x + (150 * mobileGameplayScale),
 
     bottom: bottom,
 
     top:
-      bottom + 35
+      bottom + (35 * mobileGameplayScale)
 
   };
 
@@ -601,13 +630,14 @@ function risingBox() {
 
     left: 7050,
 
-    right: 7270,
+    right:
+      7050 + (220 * mobileGameplayScale),
 
     bottom:
       risingBottom,
 
     top:
-      risingBottom + 55
+      risingBottom + (55 * mobileGameplayScale)
 
   };
 
@@ -624,11 +654,13 @@ function riverLogBox() {
 
     left: 4825,
 
-    right: 5015,
+    right:
+      4825 + (190 * mobileGameplayScale),
 
     bottom: 105,
 
-    top: 170
+    top:
+      105 + (65 * mobileGameplayScale)
 
   };
 
@@ -678,7 +710,7 @@ function blockHorizontal(box) {
 
     positionX =
       box.left -
-      bodyRightOffset;
+      effectiveBodyRightOffset;
 
   }
 
@@ -689,7 +721,7 @@ function blockHorizontal(box) {
 
     positionX =
       box.right -
-      bodyLeftOffset;
+      effectiveBodyLeftOffset;
 
   }
 
@@ -801,9 +833,11 @@ function mushroomBounce() {
 
     left: 2050,
 
-    right: 2180,
+    right:
+      2050 + (130 * mobileGameplayScale),
 
-    top: 185
+    top:
+      groundTop + (95 * mobileGameplayScale)
 
   };
 
@@ -899,7 +933,7 @@ function hitFloatingCrates() {
         positionY =
           box.bottom -
           feetOffsetY -
-          120;
+          effectiveBodyHeight;
 
 
         velocityY = -3;

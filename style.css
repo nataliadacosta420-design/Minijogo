@@ -3900,41 +3900,140 @@ body,
   }
 }
 
+
+
 /* ============================================================
-   CÂMERA MOBILE — escala o jogo inteiro proporcionalmente
-   Mantém física, hitboxes e tamanhos relativos intactos.
+   AJUSTE FINAL SEGURO — mantém a escala do print de referência
+============================================================ */
+@media (orientation: landscape) and (max-height: 650px) {
+  .sunflower {
+    font-size: 43px !important;
+  }
+}
+
+/* ============================================================
+   MOBILE GAMEPLAY PROPORCIONAL
+   Cenário fica 100%.
+   Sprites + obstáculos + hitboxes ficam ~70%.
 ============================================================ */
 
-@media (orientation: landscape) and (max-height: 650px) {
-  :root {
-    --game-mobile-scale: 0.56;
+@media (orientation: landscape) and (max-height: 700px) {
+
+  /* Sarah: a caixa física continua no mesmo lugar.
+     O ponto de escala é exatamente nos pés lógicos (150px). */
+  #player {
+    scale: .70 !important;
+    transform-origin: center calc(100% - 150px) !important;
   }
 
-  #world {
-    width: calc(9000px / var(--game-mobile-scale)) !important;
-    height: calc(100dvh / var(--game-mobile-scale)) !important;
-
-    transform: scale(var(--game-mobile-scale));
-    transform-origin: left bottom;
+  /* plataformas normais */
+  .log {
+    width: 210px !important;
+    height: 84px !important;
+    transform: translateY(13px) !important;
   }
 
-  /* Os cenários precisam preencher a altura "virtual" antes da escala. */
-  .area,
-  #nightToDay,
-  #dayArea,
-  #dayToSunset {
-    height: calc(100dvh / var(--game-mobile-scale)) !important;
+  .rock {
+    width: 126px !important;
+    height: 105px !important;
+    transform: translateY(13px) !important;
   }
 
-  /* HUD e controles ficam fora do zoom e continuam legíveis. */
-  #counter {
-    font-size: 18px !important;
+  .crate {
+    width: 91px !important;
+    height: 91px !important;
+    transform: translateY(8px) !important;
   }
 
-  #controls button {
-    width: 58px !important;
-    height: 58px !important;
-    font-size: 22px !important;
+  /* cogumelo */
+  #bounceMushroom {
+    width: 91px !important;
+    height: 84px !important;
+  }
+
+  /* caixas flutuantes */
+  .floating-crate {
+    width: 77px !important;
+    height: 77px !important;
+  }
+
+  /* caixotes */
+  #pushableCrate,
+  #returnCrate {
+    width: 91px !important;
+    height: 91px !important;
+  }
+
+  /* paredão */
+  #puzzleLedge {
+    width: 182px !important;
+    height: 182px !important;
+  }
+
+  /* tronco do rio */
+  #riverLog {
+    width: 133px !important;
+    height: 53px !important;
+  }
+
+  /* plataforma que sobe */
+  #risingPlatform {
+    width: 154px !important;
+    height: 39px !important;
+  }
+
+  /* plataformas temporárias */
+  .temporary-platform {
+    width: 105px !important;
+    height: 25px !important;
+  }
+
+  /* botões físicos do mapa */
+  #floorButton,
+  #temporaryButton {
+    scale: .70 !important;
+    transform-origin: left bottom !important;
+  }
+
+  #finalButton {
+    scale: .70 !important;
+    transform-origin: left bottom !important;
+  }
+
+  #finalDoor {
+    scale: .78 !important;
+    transform-origin: center bottom !important;
+  }
+
+  /* coletáveis / inimigos / decoração interativa */
+  .sunflower {
+    font-size: 38px !important;
+  }
+
+  #secretKey {
+    width: 46px !important;
+  }
+
+  .bird {
+    width: 41px !important;
+    height: 34px !important;
+    font-size: 31px !important;
+  }
+
+  .checkpoint {
+    scale: .78 !important;
+    transform-origin: center bottom !important;
+  }
+
+  #birdWarning {
+    scale: .78 !important;
+    transform-origin: left bottom !important;
+  }
+
+  /* Nuvem: menor visualmente, mas não mexe na posição do vão */
+  #movingCloud {
+    width: 168px !important;
+    height: 84px !important;
   }
 }
 
