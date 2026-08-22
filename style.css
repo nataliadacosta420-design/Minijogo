@@ -3496,3 +3496,155 @@ body.menu-open #controls {
     font-size: 20px !important;
   }
 }
+/* =========================================
+   CELULAR DEITADO — AJUSTE FINAL
+========================================= */
+
+@media (max-height: 600px) and (orientation: landscape) {
+
+  /* ---------- JOGO ---------- */
+
+  #player {
+    width: 180px !important;
+    height: 205px !important;
+    bottom: -25px !important;
+  }
+
+  #counter {
+    top: 10px !important;
+    left: 12px !important;
+
+    padding: 8px 14px !important;
+
+    font-size: 17px !important;
+  }
+
+  #controls {
+    bottom: 12px !important;
+  }
+
+  #controls button {
+    width: 58px !important;
+    height: 58px !important;
+
+    font-size: 21px !important;
+  }
+
+
+  /* ---------- TELA DA MISSÃO ---------- */
+
+  #missionScreen {
+    padding: 10px !important;
+
+    overflow-y: auto !important;
+
+    align-items: center !important;
+  }
+
+  .missionBox {
+    width: min(620px, 82vw) !important;
+
+    padding: 16px 24px !important;
+
+    border-width: 2px !important;
+
+    border-radius: 14px !important;
+  }
+
+  .missionMini {
+    font-size: 9px !important;
+  }
+
+  .missionBox h2 {
+    margin: 2px 0 5px !important;
+
+    font-size: 23px !important;
+  }
+
+  .missionIntro {
+    margin-bottom: 10px !important;
+
+    font-size: 12px !important;
+  }
+
+  .missionGoals {
+    gap: 7px !important;
+
+    margin-bottom: 12px !important;
+  }
+
+  .missionGoal {
+    min-height: 0 !important;
+
+    padding: 7px 11px !important;
+
+    gap: 10px !important;
+  }
+
+  .missionGoal span {
+    font-size: 18px !important;
+  }
+
+  .missionGoal p {
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+  }
+
+  #beginAdventureBtn {
+    padding: 9px !important;
+
+    font-size: 12px !important;
+  }
+
+
+  /* ---------- MENU INICIAL ---------- */
+
+  #startScreen {
+    padding: 10px !important;
+  }
+
+  #startCard {
+    width: min(720px, 88vw) !important;
+
+    min-height: 0 !important;
+    height: 82vh !important;
+  }
+
+  .startCharacterSide {
+    min-height: 0 !important;
+  }
+
+  #mainCharacterCard img {
+    width: 210px !important;
+
+    bottom: -30px !important;
+  }
+
+  .startMenuSide {
+    padding: 20px 35px 20px 15px !important;
+  }
+
+  .startMenuSide h1 {
+    margin-bottom: 15px !important;
+
+    font-size: 35px !important;
+  }
+
+  .startButtons {
+    gap: 7px !important;
+  }
+
+  .startButtons button {
+    min-height: 38px !important;
+
+    padding: 7px 12px !important;
+
+    font-size: 12px !important;
+  }
+
+  .startButtons .mainStartBtn {
+    min-height: 44px !important;
+
+    font-size: 14px !important;
+  }
+}
