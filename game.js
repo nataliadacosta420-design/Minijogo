@@ -107,6 +107,7 @@ const beachFlowerCount = document.getElementById("beachFlowerCount");
 const beachKeyCount = document.getElementById("beachKeyCount");
 
 const finalBouquet = document.getElementById("finalBouquet");
+const finalThankYou = document.getElementById("finalThankYou");
 
 
 
@@ -2740,20 +2741,20 @@ function showFinalBouquet() {
     spawnBouquetSparkles();
   }, 2100);
 
-  /* O botão aparece só depois de deixar o final respirar. */
+  /* Mensagem final entra depois do buquê. */
+  setTimeout(function() {
+    if (finalThankYou) {
+      finalThankYou.classList.add("show");
+    }
+  }, 2200);
+
+  /* O botão aparece só depois da mensagem. */
   setTimeout(function() {
     if (backToStartBtn) {
       backToStartBtn.classList.add("show");
     }
-  }, 2600);
-setTimeout(function() {
-  const finalThankYou =
-    document.getElementById("finalThankYou");
-
-  if (finalThankYou) {
-    finalThankYou.classList.add("show");
-  }
-}, 2300);}
+  }, 4300);
+}
 
 
 if (flowerDropBox) {

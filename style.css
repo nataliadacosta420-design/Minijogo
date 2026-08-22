@@ -3410,79 +3410,87 @@ body.menu-open #controls {
   background: #ffe48c;
   transform: translateY(-2px);
 }
-/* MENSAGEM FINAL */
 
-#finalThankYou {
-  position: fixed;
-  left: 50%;
-  top: 9%;
+/* ============================================================
+   MOBILE-FIRST FINAL — NÃO MEXER NA FÍSICA DO PLAYER
+   A hitbox e o bottom do #player continuam exatamente como o JS espera.
+   Só o desenho da personagem é redimensionado no ::after.
+============================================================ */
 
-  transform: translate(-50%, 10px);
-
-  padding: 12px 22px;
-
-  text-align: center;
-  color: white;
-
-  font: 17px/1.6 Arial, sans-serif;
-
-  background: rgba(8, 12, 35, .55);
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 14px;
-
-  backdrop-filter: blur(3px);
-
-  opacity: 0;
-  pointer-events: none;
-
-  z-index: 40;
-
-  transition:
-    opacity 1.2s ease,
-    transform 1.2s ease;
+html,
+body,
+#game,
+#world {
+  height: 100dvh;
 }
 
-#finalThankYou.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
+.area,
+#nightToDay,
+#dayArea,
+#dayToSunset {
+  height: 100dvh;
 }
 
-#finalThankYou p {
-  margin: 0;
-}
-
-#finalThankYou p:last-child {
-  color: #fff1c4;
-}
-
-/* =========================================================
-   RESPONSIVIDADE FINAL — MOBILE FIRST / QUALQUER TELA
-   Escala visual pela MENOR dimensão da viewport.
-   Não altera coordenadas do mundo nem lógica do jogo.
-========================================================= */
-
-:root {
-  --ui-scale: clamp(.62, min(1vw, 1.75vh), 1);
-}
-
-/* ---------- JOGO ---------- */
-
+/* ---------- PERSONAGEM PRINCIPAL ----------
+   #player mantém 350x400 e positionY do JS.
+   O sprite visual vive no ::after e os pés ficam em 150px,
+   exatamente no feetOffsetY usado pela lógica do jogo.
+*/
 #player {
-  width: clamp(165px, 42vh, 350px);
-  height: clamp(188px, 48vh, 400px);
-  bottom: clamp(-60px, -7vh, -28px);
+  width: 350px !important;
+  height: 400px !important;
+
+  background-image: none !important;
+
+  margin: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
+
+#player::after {
+  content: "";
+
+  position: absolute;
+
+  left: 50%;
+  bottom: 150px;
+
+  width: clamp(190px, 43dvh, 300px);
+  height: clamp(220px, 50dvh, 340px);
+
+  transform: translateX(-50%);
+
+  background-image: url("personagem.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+
+  image-rendering: pixelated;
+
+  pointer-events: none;
+}
+
+/* ---------- HUD / CONTROLES ---------- */
 
 #counter {
-  top: clamp(8px, 2.2vh, 20px);
-  left: clamp(8px, 2.2vh, 20px);
-  padding: clamp(5px, 1.1vh, 8px) clamp(9px, 1.5vw, 15px);
-  font-size: clamp(15px, 3vh, 25px);
+  top: max(8px, env(safe-area-inset-top));
+  left: max(8px, env(safe-area-inset-left));
+
+  padding:
+    clamp(5px, 1.2dvh, 8px)
+    clamp(9px, 1.4vw, 15px);
+
+  font-size: clamp(15px, 3dvh, 25px);
 }
 
 #controls {
-  bottom: clamp(8px, 2.4vh, 20px);
-  padding-inline: clamp(10px, 2.4vw, 25px);
+  bottom: max(8px, env(safe-area-inset-bottom));
+
+  padding-left:
+    max(10px, env(safe-area-inset-left));
+
+  padding-right:
+    max(10px, env(safe-area-inset-right));
 }
 
 .left-controls {
@@ -3490,294 +3498,379 @@ body.menu-open #controls {
 }
 
 #controls button {
-  width: clamp(48px, 10.5vh, 65px);
-  height: clamp(48px, 10.5vh, 65px);
-  font-size: clamp(18px, 4vh, 26px);
-}
+  width: clamp(48px, 10dvh, 65px);
+  height: clamp(48px, 10dvh, 65px);
 
-/* Avisos do jogo */
-#runMessage {
-  font-size: clamp(25px, 7vh, 48px);
-}
-
-#doorMessage {
-  max-width: min(430px, 82vw);
-  padding: clamp(7px, 1.8vh, 12px) clamp(10px, 2vw, 18px);
-  font-size: clamp(13px, 2.8vh, 19px);
-}
-
-#doorFadeText {
-  font-size: clamp(15px, 3.2vh, 22px);
-}
-
-/* ---------- PRAIA ---------- */
-
-#beachPlayer {
-  width: clamp(175px, 46vh, 360px) !important;
-  bottom: clamp(-52px, -6.5vh, -24px) !important;
-}
-
-#natCharacter {
-  width: clamp(145px, 35vh, 270px) !important;
-  bottom: clamp(-35px, -4.5vh, -18px) !important;
-}
-
-#natSpeech {
-  bottom: clamp(150px, 36vh, 275px) !important;
-  padding: clamp(6px, 1.4vh, 10px) clamp(9px, 1.5vw, 16px) !important;
-  font-size: clamp(12px, 2.5vh, 17px) !important;
-}
-
-#beachCounter {
-  top: clamp(8px, 2vh, 22px);
-  left: clamp(8px, 2vw, 22px);
-  padding: clamp(5px, 1.2vh, 9px) clamp(8px, 1.5vw, 15px);
-  font-size: clamp(13px, 2.7vh, 20px);
-}
-
-#beachIntro {
-  top: clamp(6%, 10vh, 18%) !important;
-  max-width: min(430px, 72vw) !important;
-  padding: clamp(6px, 1.5vh, 9px) clamp(9px, 1.5vw, 14px) !important;
-  font-size: clamp(12px, 2.5vh, 17px) !important;
-}
-
-#flowerDropBox {
-  bottom: clamp(58px, 15vh, 105px);
-  width: clamp(72px, 14vh, 115px);
-  height: clamp(52px, 10vh, 82px);
-}
-
-.dropBoxBody {
-  height: 73%;
-  border-width: clamp(4px, .8vh, 6px);
-}
-
-.dropBoxLid {
-  height: 30%;
-  border-width: clamp(4px, .8vh, 6px);
-}
-
-.dropHint {
-  font-size: clamp(20px, 4.2vh, 31px);
-}
-
-#finalBouquet,
-#finalBouquet.held {
-  width: clamp(220px, 55vh, 500px) !important;
-  bottom: clamp(55px, 12vh, 90px) !important;
-}
-
-#backToStartBtn {
-  bottom: clamp(8px, 2.5vh, 24px);
-  padding: clamp(7px, 1.5vh, 10px) clamp(11px, 1.6vw, 18px);
-  font-size: clamp(12px, 2.4vh, 16px);
-}
-
-#finalThankYou {
-  top: clamp(4%, 7vh, 9%);
-  width: min(420px, 72vw);
-  padding: clamp(6px, 1.4vh, 12px) clamp(10px, 1.8vw, 22px);
-  font-size: clamp(12px, 2.4vh, 17px);
-  line-height: 1.35;
+  font-size: clamp(18px, 4dvh, 26px);
 }
 
 /* ---------- TELA INICIAL ---------- */
 
 #startScreen {
-  padding: clamp(8px, 2.5vh, 24px);
+  min-height: 100dvh;
+  padding: clamp(8px, 2dvh, 24px);
 }
 
 #startCard {
   width: min(820px, 92vw);
-  min-height: 0;
+
+  min-height: 0 !important;
   height: min(470px, 86dvh);
   max-height: 86dvh;
-  grid-template-columns: .9fr 1.1fr;
 }
 
 .startCharacterSide {
-  min-height: 0;
+  min-height: 0 !important;
   height: 100%;
 }
 
 #mainCharacterCard img {
-  width: clamp(170px, 43vh, 340px);
+  width: clamp(175px, 42dvh, 340px);
   max-height: 92%;
+
   object-fit: contain;
-  bottom: clamp(-38px, -5vh, -16px);
+
+  bottom: clamp(-38px, -5dvh, -16px);
 }
 
 .clickHint {
-  bottom: clamp(7px, 2vh, 18px);
-  padding: clamp(4px, .9vh, 7px) clamp(7px, 1vw, 11px);
-  font-size: clamp(9px, 1.9vh, 13px);
+  bottom: clamp(7px, 2dvh, 18px);
+
+  padding:
+    clamp(4px, .9dvh, 7px)
+    clamp(7px, 1vw, 11px);
+
+  font-size: clamp(9px, 1.9dvh, 13px);
 }
 
 .startMenuSide {
   padding:
-    clamp(14px, 5vh, 56px)
+    clamp(14px, 5dvh, 56px)
     clamp(18px, 4vw, 58px)
-    clamp(14px, 5vh, 56px)
+    clamp(14px, 5dvh, 56px)
     clamp(14px, 2.5vw, 35px);
 }
 
 .startMenuSide h1 {
-  margin-bottom: clamp(12px, 4vh, 36px);
-  font-size: clamp(28px, 8vh, 70px);
+  margin-bottom: clamp(12px, 4dvh, 36px);
+
+  font-size: clamp(28px, 8dvh, 70px);
 }
 
 .startButtons {
-  gap: clamp(6px, 1.5vh, 12px);
+  gap: clamp(6px, 1.5dvh, 12px);
 }
 
 .startButtons button {
-  min-height: clamp(34px, 7vh, 53px);
-  padding: clamp(6px, 1.5vh, 12px) clamp(10px, 1.5vw, 20px);
-  font-size: clamp(11px, 2.4vh, 16px);
+  min-height: clamp(34px, 7dvh, 53px);
+
+  padding:
+    clamp(6px, 1.4dvh, 12px)
+    clamp(10px, 1.5vw, 20px);
+
+  font-size: clamp(11px, 2.4dvh, 16px);
 }
 
 .startButtons .mainStartBtn {
-  min-height: clamp(40px, 8vh, 64px);
-  font-size: clamp(13px, 2.8vh, 19px);
+  min-height: clamp(40px, 8dvh, 64px);
+  font-size: clamp(13px, 2.8dvh, 19px);
 }
 
-/* ---------- POPUPS / PERSONAGENS ---------- */
+/* ---------- POPUPS ---------- */
 
 .menuPopup {
-  padding: clamp(8px, 2vh, 22px);
+  padding: clamp(8px, 2dvh, 22px);
   overflow-y: auto;
 }
 
 .popupBox {
   max-height: 88dvh;
   overflow-y: auto;
-  padding: clamp(16px, 4vh, 34px);
+
+  padding: clamp(16px, 4dvh, 34px);
 }
 
 .popupBox h2 {
-  margin-bottom: clamp(12px, 3vh, 24px);
-  font-size: clamp(22px, 4.5vh, 30px);
-}
+  margin-bottom: clamp(12px, 3dvh, 24px);
 
-.howToContent {
-  gap: clamp(7px, 1.8vh, 13px);
-  font-size: clamp(12px, 2.5vh, 17px);
-}
-
-.smallProfile {
-  grid-template-columns: clamp(90px, 22vh, 180px) 1fr;
-  gap: clamp(12px, 2.5vw, 26px);
-}
-
-.profileSprite {
-  width: clamp(90px, 22vh, 180px);
-}
-
-.profileText h2 {
-  margin-bottom: clamp(10px, 2.5vh, 22px);
-  font-size: clamp(24px, 5vh, 36px);
-}
-
-.profileText p {
-  font-size: clamp(16px, 3.3vh, 24px);
-}
-
-.characterGrid {
-  gap: clamp(8px, 2vw, 18px);
+  font-size: clamp(22px, 4.5dvh, 30px);
 }
 
 .characterProfileCard {
   min-height: 0;
-  grid-template-columns: clamp(85px, 19vh, 145px) 1fr;
+
+  grid-template-columns:
+    clamp(85px, 19dvh, 145px)
+    1fr;
+
   gap: clamp(8px, 1.5vw, 14px);
-  padding: clamp(10px, 2.5vh, 18px);
+
+  padding: clamp(10px, 2.4dvh, 18px);
 }
 
 .characterProfileCard img {
-  width: clamp(85px, 19vh, 145px);
-  max-height: 38vh;
+  width: clamp(85px, 19dvh, 145px);
+  max-height: 38dvh;
 }
 
 .characterProfileCard img[alt="Nati"] {
-  width: clamp(65px, 14vh, 105px);
+  width: clamp(65px, 14dvh, 105px);
 }
 
 .characterProfileCard h3 {
-  margin-bottom: clamp(7px, 1.8vh, 15px);
-  font-size: clamp(18px, 3.7vh, 27px);
+  margin-bottom: clamp(7px, 1.7dvh, 15px);
+
+  font-size: clamp(18px, 3.7dvh, 27px);
 }
 
 .characterProfileCard p {
-  font-size: clamp(11px, 2.2vh, 16px);
+  font-size: clamp(11px, 2.15dvh, 16px);
+}
+
+.howToContent {
+  gap: clamp(7px, 1.8dvh, 13px);
+
+  font-size: clamp(12px, 2.4dvh, 17px);
+}
+
+.smallProfile {
+  grid-template-columns:
+    clamp(90px, 22dvh, 180px)
+    1fr;
+
+  gap: clamp(12px, 2.5vw, 26px);
+}
+
+.profileSprite {
+  width: clamp(90px, 22dvh, 180px);
 }
 
 /* ---------- MISSÃO ---------- */
 
 #missionScreen {
-  padding: clamp(8px, 2.5vh, 20px);
+  min-height: 100dvh;
+
+  padding: clamp(8px, 2dvh, 20px);
+
   overflow-y: auto;
 }
 
 .missionBox {
-  width: min(520px, 88vw);
-  max-height: 90dvh;
+  width: min(560px, 88vw);
+  max-height: 88dvh;
+
   overflow-y: auto;
+
   padding:
-    clamp(12px, 4vh, 38px)
+    clamp(12px, 3.7dvh, 38px)
     clamp(14px, 3vw, 34px);
-  border-width: clamp(2px, .5vh, 3px);
 }
 
 .missionMini {
-  font-size: clamp(8px, 1.8vh, 12px);
+  font-size: clamp(8px, 1.8dvh, 12px);
 }
 
 .missionBox h2 {
-  margin: clamp(3px, 1vh, 8px) 0 clamp(5px, 1.5vh, 12px);
-  font-size: clamp(20px, 5vh, 34px);
+  margin:
+    clamp(3px, 1dvh, 8px)
+    0
+    clamp(5px, 1.5dvh, 12px);
+
+  font-size: clamp(20px, 5dvh, 34px);
 }
 
 .missionIntro {
-  margin-bottom: clamp(8px, 3vh, 28px);
-  font-size: clamp(11px, 2.4vh, 16px);
+  margin-bottom: clamp(8px, 2.5dvh, 28px);
+
+  font-size: clamp(11px, 2.35dvh, 16px);
 }
 
 .missionGoals {
-  gap: clamp(6px, 1.8vh, 12px);
-  margin-bottom: clamp(9px, 3vh, 30px);
+  gap: clamp(6px, 1.6dvh, 12px);
+
+  margin-bottom: clamp(9px, 2.6dvh, 30px);
 }
 
 .missionGoal {
   gap: clamp(8px, 1.5vw, 14px);
-  padding: clamp(6px, 1.8vh, 13px) clamp(9px, 1.5vw, 15px);
+
+  padding:
+    clamp(6px, 1.6dvh, 13px)
+    clamp(9px, 1.5vw, 15px);
 }
 
 .missionGoal span {
-  font-size: clamp(17px, 3.8vh, 25px);
+  font-size: clamp(17px, 3.6dvh, 25px);
 }
 
 .missionGoal p {
-  font-size: clamp(11px, 2.3vh, 15px);
-  line-height: 1.3;
+  font-size: clamp(11px, 2.2dvh, 15px);
+  line-height: 1.25;
 }
 
 #beginAdventureBtn {
-  padding: clamp(8px, 2vh, 15px);
-  font-size: clamp(11px, 2.4vh, 16px);
+  padding: clamp(8px, 1.8dvh, 15px);
+
+  font-size: clamp(11px, 2.3dvh, 16px);
 }
 
-/* Celular em pé: menus viram uma coluna.
-   O jogo continua jogável, mas paisagem aproveita melhor o cenário. */
+/* ---------- PRAIA ---------- */
+
+#beachScene {
+  min-height: 100dvh;
+}
+
+#beachPlayer {
+  width: clamp(185px, 45dvh, 330px) !important;
+
+  bottom: clamp(-40px, -5dvh, -22px) !important;
+}
+
+#natCharacter {
+  width: clamp(145px, 34dvh, 255px) !important;
+
+  bottom: clamp(-32px, -4dvh, -17px) !important;
+}
+
+#natSpeech {
+  bottom: clamp(145px, 35dvh, 265px) !important;
+
+  padding:
+    clamp(6px, 1.3dvh, 10px)
+    clamp(9px, 1.5vw, 16px) !important;
+
+  font-size: clamp(12px, 2.45dvh, 17px) !important;
+}
+
+#beachCounter {
+  top: max(8px, env(safe-area-inset-top));
+  left: max(8px, env(safe-area-inset-left));
+
+  padding:
+    clamp(5px, 1.1dvh, 9px)
+    clamp(8px, 1.5vw, 15px);
+
+  font-size: clamp(13px, 2.6dvh, 20px);
+}
+
+#beachIntro {
+  top: clamp(6%, 10dvh, 18%) !important;
+
+  max-width: min(430px, 72vw) !important;
+
+  padding:
+    clamp(6px, 1.4dvh, 9px)
+    clamp(9px, 1.5vw, 14px) !important;
+
+  font-size: clamp(12px, 2.4dvh, 17px) !important;
+}
+
+#flowerDropBox {
+  bottom: clamp(58px, 15dvh, 105px);
+
+  width: clamp(72px, 14dvh, 115px);
+  height: clamp(52px, 10dvh, 82px);
+}
+
+.dropHint {
+  font-size: clamp(20px, 4dvh, 31px);
+}
+
+#finalBouquet,
+#finalBouquet.held {
+  width: clamp(235px, 54dvh, 470px) !important;
+
+  bottom: clamp(52px, 12dvh, 90px) !important;
+}
+
+/* mensagem final */
+#finalThankYou {
+  position: fixed;
+
+  left: 50%;
+  top: clamp(4%, 6.5dvh, 9%);
+
+  transform:
+    translate(-50%, 8px);
+
+  width: min(420px, 72vw);
+
+  padding:
+    clamp(6px, 1.3dvh, 11px)
+    clamp(10px, 1.7vw, 20px);
+
+  background:
+    rgba(8, 12, 35, .40);
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  border-radius: 12px;
+
+  color: white;
+
+  text-align: center;
+
+  font:
+    clamp(12px, 2.3dvh, 16px) /
+    1.4
+    Arial, sans-serif;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  z-index: 40;
+
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
+}
+
+#finalThankYou.show {
+  opacity: 1;
+
+  transform:
+    translate(-50%, 0);
+}
+
+#finalThankYou p {
+  margin: 0;
+}
+
+#finalThankYou p:last-child {
+  margin-top: 2px;
+  color: #fff1c4;
+}
+
+#backToStartBtn {
+  bottom:
+    max(
+      8px,
+      env(safe-area-inset-bottom)
+    );
+
+  padding:
+    clamp(7px, 1.4dvh, 10px)
+    clamp(11px, 1.6vw, 18px);
+
+  font-size: clamp(12px, 2.3dvh, 16px);
+}
+
+/* ---------- CELULAR EM PÉ ---------- */
+
 @media (orientation: portrait) and (max-width: 700px) {
+
   #startCard {
     height: min(720px, 90dvh);
+
     grid-template-columns: 1fr;
     grid-template-rows: 50% 50%;
   }
 
   #mainCharacterCard img {
-    width: clamp(170px, 31vh, 250px);
+    width: clamp(170px, 30dvh, 245px);
   }
 
   .startMenuSide {
@@ -3786,29 +3879,31 @@ body.menu-open #controls {
 
   .characterGrid {
     grid-template-columns: 1fr;
-    max-height: 68dvh;
+
+    max-height: 66dvh;
+
     overflow-y: auto;
   }
 
   .smallProfile {
-    grid-template-columns: clamp(85px, 17vh, 120px) 1fr;
+    grid-template-columns:
+      clamp(85px, 17dvh, 120px)
+      1fr;
   }
 }
 
-/* Celular/tablet deitado: preserva a composição horizontal e usa a altura real. */
+/* ---------- CELULAR / TABLET DEITADO ---------- */
+
 @media (orientation: landscape) and (max-height: 650px) {
+
   #startCard {
     width: min(760px, 90vw);
     height: 82dvh;
   }
 
-  #missionScreen {
-    align-items: center;
-  }
-
   .missionBox {
     width: min(620px, 78vw);
-    max-height: 86dvh;
+    max-height: 84dvh;
   }
 
   .charactersBox {
@@ -3818,24 +3913,11 @@ body.menu-open #controls {
   .characterGrid {
     grid-template-columns: 1fr 1fr;
   }
-}
-/* CORREÇÃO MOBILE: mantém a Sarah visível no chão */
 
-@media (max-width: 900px) {
-
-  #player {
-    width: 260px !important;
-    height: 300px !important;
-
-    background-size: contain !important;
-    background-position: center bottom !important;
-
-    /*
-      O JS continua usando bottom:-60px.
-      Isso puxa só a IMAGEM visualmente pra cima
-      sem alterar a física do jogo.
-    */
-    margin-bottom: 42px !important;
+  /* no celular deitado a Sarah fica visível no chão,
+     mas ainda deixa bastante cenário à vista */
+  #player::after {
+    width: clamp(205px, 47dvh, 270px);
+    height: clamp(235px, 54dvh, 310px);
   }
-
 }
