@@ -3432,42 +3432,28 @@ body,
 }
 
 /* ---------- PERSONAGEM PRINCIPAL ----------
-   #player mantém 350x400 e positionY do JS.
-   O sprite visual vive no ::after e os pés ficam em 150px,
-   exatamente no feetOffsetY usado pela lógica do jogo.
+   Mantém exatamente a caixa e o posicionamento que a física do JS espera.
+   Só reduz um pouco a IMAGEM dentro dela; não muda bottom/height/hitbox.
 */
 #player {
   width: 350px !important;
   height: 400px !important;
 
-  background-image: none !important;
-
   margin: 0 !important;
+
+  background-image: url("personagem.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center bottom !important;
+
+  /* menor que no PC, sem deslocar os pés */
+  background-size: clamp(245px, 62dvh, 350px) auto !important;
+
   opacity: 1 !important;
   visibility: visible !important;
 }
 
 #player::after {
-  content: "";
-
-  position: absolute;
-
-  left: 50%;
-  bottom: 150px;
-
-  width: clamp(190px, 43dvh, 300px);
-  height: clamp(220px, 50dvh, 340px);
-
-  transform: translateX(-50%);
-
-  background-image: url("personagem.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-
-  image-rendering: pixelated;
-
-  pointer-events: none;
+  content: none !important;
 }
 
 /* ---------- HUD / CONTROLES ---------- */
@@ -3913,11 +3899,32 @@ body,
   .characterGrid {
     grid-template-columns: 1fr 1fr;
   }
+}
 
-  /* no celular deitado a Sarah fica visível no chão,
-     mas ainda deixa bastante cenário à vista */
-  #player::after {
-    width: clamp(205px, 47dvh, 270px);
-    height: clamp(235px, 54dvh, 310px);
+
+
+/* ============================================================
+   AJUSTE VISUAL FINAL DO MAPA NO CELULAR
+   Não altera posição nem hitbox dos objetos.
+============================================================ */
+
+@media (max-width: 900px) {
+  /* Girassóis coletáveis não ficam do tamanho da personagem */
+  .sunflower {
+    font-size: clamp(30px, 7dvh, 43px) !important;
+  }
+
+  /* Chave também acompanha a escala visual */
+  #secretKey {
+    width: clamp(42px, 9dvh, 58px) !important;
+  }
+
+  /* checkpoints e aves um pouco menores */
+  .checkpoint {
+    font-size: clamp(26px, 6dvh, 34px) !important;
+  }
+
+  .bird {
+    font-size: clamp(30px, 7dvh, 40px) !important;
   }
 }
