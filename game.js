@@ -4,6 +4,7 @@ const player = document.getElementById("player");
 const leftBtn = document.getElementById("leftBtn");
 const rightBtn = document.getElementById("rightBtn");
 const jumpBtn = document.getElementById("jumpBtn");
+const controls = document.getElementById("controls");
 
 const counter = document.getElementById("counter");
 
@@ -119,6 +120,9 @@ const finalThankYou = document.getElementById("finalThankYou");
 
 const worldWidth = 9000;
 
+const VIRTUAL_WIDTH = 1600;
+const VIRTUAL_HEIGHT = 720;
+
 const speed = 6;
 const gravity = 1;
 
@@ -131,31 +135,6 @@ const bodyLeftOffset = 125;
 const bodyRightOffset = 225;
 
 const feetOffsetY = 150;
-
-/* Escala proporcional do gameplay no celular deitado.
-   O cenário continua 100%; personagem, obstáculos e hitboxes
-   ficam menores juntos, mantendo os pés no mesmo chão. */
-const mobileGameplay =
-  window.matchMedia(
-    "(orientation: landscape) and (max-height: 700px)"
-  ).matches;
-
-const mobileGameplayScale =
-  mobileGameplay ? 0.70 : 1;
-
-const bodyCenterOffset = 175;
-const bodyHalfWidth =
-  50 * mobileGameplayScale;
-
-const effectiveBodyLeftOffset =
-  bodyCenterOffset - bodyHalfWidth;
-
-const effectiveBodyRightOffset =
-  bodyCenterOffset + bodyHalfWidth;
-
-const effectiveBodyHeight =
-  120 * mobileGameplayScale;
-
 
 
 /* =====================
@@ -279,16 +258,16 @@ function playerBox(
   return {
 
     left:
-      x + effectiveBodyLeftOffset,
+      x + bodyLeftOffset,
 
     right:
-      x + effectiveBodyRightOffset,
+      x + bodyRightOffset,
 
     bottom:
       y + feetOffsetY,
 
     top:
-      y + feetOffsetY + effectiveBodyHeight
+      y + feetOffsetY + 120
 
   };
 
@@ -452,14 +431,14 @@ function platformBox(el) {
     Number(el.dataset.x);
 
 
-  let height = 115 * mobileGameplayScale;
+  let height = 115;
 
 
   if (
     el.classList.contains("log")
   ) {
 
-    height = 55 * mobileGameplayScale;
+    height = 55;
 
   }
 
@@ -468,7 +447,7 @@ function platformBox(el) {
     el.classList.contains("rock")
   ) {
 
-    height = 100 * mobileGameplayScale;
+    height = 100;
 
   }
 
@@ -506,12 +485,11 @@ function floatingBox(el) {
     left: x,
 
     right:
-      x + (110 * mobileGameplayScale),
+      x + 110,
 
     bottom: 270,
 
-    top:
-      270 + (110 * mobileGameplayScale)
+    top: 380
 
   };
 
@@ -528,13 +506,11 @@ function puzzleBox() {
 
     left: 4200,
 
-    right:
-      4200 + (260 * mobileGameplayScale),
+    right: 4460,
 
     bottom: 90,
 
-    top:
-      groundTop + (260 * mobileGameplayScale)
+    top: 350
 
   };
 
@@ -553,13 +529,13 @@ function pushableBox() {
       pushableX,
 
     right:
-      pushableX + (130 * mobileGameplayScale),
+      pushableX + 130,
 
     bottom:
       groundTop,
 
     top:
-      groundTop + (115 * mobileGameplayScale)
+      groundTop + 115
 
   };
 
@@ -576,14 +552,13 @@ function returnCrateBox() {
 
     left: 4480,
 
-    right:
-      4480 + (130 * mobileGameplayScale),
+    right: 4610,
 
     bottom:
       groundTop,
 
     top:
-      groundTop + (115 * mobileGameplayScale)
+      groundTop + 115
 
   };
 
@@ -608,12 +583,12 @@ function temporaryPlatformBox(el) {
     left: x,
 
     right:
-      x + (150 * mobileGameplayScale),
+      x + 150,
 
     bottom: bottom,
 
     top:
-      bottom + (35 * mobileGameplayScale)
+      bottom + 35
 
   };
 
@@ -630,14 +605,13 @@ function risingBox() {
 
     left: 7050,
 
-    right:
-      7050 + (220 * mobileGameplayScale),
+    right: 7270,
 
     bottom:
       risingBottom,
 
     top:
-      risingBottom + (55 * mobileGameplayScale)
+      risingBottom + 55
 
   };
 
@@ -654,13 +628,11 @@ function riverLogBox() {
 
     left: 4825,
 
-    right:
-      4825 + (190 * mobileGameplayScale),
+    right: 5015,
 
     bottom: 105,
 
-    top:
-      105 + (65 * mobileGameplayScale)
+    top: 170
 
   };
 
@@ -710,7 +682,7 @@ function blockHorizontal(box) {
 
     positionX =
       box.left -
-      effectiveBodyRightOffset;
+      bodyRightOffset;
 
   }
 
@@ -721,7 +693,7 @@ function blockHorizontal(box) {
 
     positionX =
       box.right -
-      effectiveBodyLeftOffset;
+      bodyLeftOffset;
 
   }
 
@@ -833,11 +805,9 @@ function mushroomBounce() {
 
     left: 2050,
 
-    right:
-      2050 + (130 * mobileGameplayScale),
+    right: 2180,
 
-    top:
-      groundTop + (95 * mobileGameplayScale)
+    top: 185
 
   };
 
@@ -933,7 +903,7 @@ function hitFloatingCrates() {
         positionY =
           box.bottom -
           feetOffsetY -
-          effectiveBodyHeight;
+          120;
 
 
         velocityY = -3;
@@ -1924,9 +1894,7 @@ function respawn() {
 function updateCamera() {
 
   const start =
-    window.innerWidth *
-    0.4;
-
+    VIRTUAL_WIDTH * 0.4;
 
   cameraX =
     Math.max(
@@ -1934,14 +1902,12 @@ function updateCamera() {
       positionX - start
     );
 
-
   const maxCamera =
     Math.max(
       0,
       worldWidth -
-      window.innerWidth
+      VIRTUAL_WIDTH
     );
-
 
   cameraX =
     Math.min(
@@ -1949,11 +1915,12 @@ function updateCamera() {
       maxCamera
     );
 
-
   world.style.transform =
     `translateX(${-cameraX}px)`;
 
 }
+
+
 
 /* =====================
    AVES
@@ -3410,6 +3377,109 @@ checkBirdCollision();
 
   requestAnimationFrame(
     gameLoop
+  );
+
+}
+
+
+
+
+/* =====================================================
+   VIEWPORT VIRTUAL
+===================================================== */
+
+function updateVirtualViewport() {
+
+  const viewport =
+    window.visualViewport;
+
+  const viewportWidth =
+    viewport
+      ? viewport.width
+      : window.innerWidth;
+
+  const viewportHeight =
+    viewport
+      ? viewport.height
+      : window.innerHeight;
+
+  /*
+    Nunca aumenta acima de 1.
+    No celular reduz tudo JUNTO.
+  */
+  const scale =
+    Math.min(
+      viewportWidth / VIRTUAL_WIDTH,
+      viewportHeight / VIRTUAL_HEIGHT,
+      1
+    );
+
+  const centerX =
+    (viewport ? viewport.offsetLeft : 0) +
+    viewportWidth / 2;
+
+  const centerY =
+    (viewport ? viewport.offsetTop : 0) +
+    viewportHeight / 2;
+
+  document.documentElement.style.setProperty(
+    "--game-scale",
+    scale
+  );
+
+  document.documentElement.style.setProperty(
+    "--game-center-x",
+    centerX + "px"
+  );
+
+  document.documentElement.style.setProperty(
+    "--game-center-y",
+    centerY + "px"
+  );
+
+}
+
+
+/*
+  HUD e controles ficam FORA do elemento escalado.
+  Assim continuam grandes o bastante para tocar no celular.
+*/
+if (counter) {
+  document.body.appendChild(counter);
+}
+
+if (controls) {
+  document.body.appendChild(controls);
+}
+
+
+updateVirtualViewport();
+
+window.addEventListener(
+  "resize",
+  updateVirtualViewport
+);
+
+window.addEventListener(
+  "orientationchange",
+  function() {
+    setTimeout(
+      updateVirtualViewport,
+      150
+    );
+  }
+);
+
+if (window.visualViewport) {
+
+  window.visualViewport.addEventListener(
+    "resize",
+    updateVirtualViewport
+  );
+
+  window.visualViewport.addEventListener(
+    "scroll",
+    updateVirtualViewport
   );
 
 }
