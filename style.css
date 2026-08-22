@@ -4037,3 +4037,40 @@ body,
   }
 }
 
+/* ============================================================
+   CORREÇÃO ANDROID / CHROME — ALTURA DO JOGO
+   Volta à mesma referência vertical que funcionava antes.
+============================================================ */
+
+#game,
+#world,
+.area,
+#nightToDay,
+#dayArea,
+#dayToSunset {
+  height: 100vh !important;
+  min-height: 0 !important;
+}
+
+#world {
+  top: 0 !important;
+  bottom: auto !important;
+}
+
+#ground {
+  bottom: 0 !important;
+}
+
+/* no gameplay, não usar dvh: em Chrome Android deitado
+   ele estava colocando o chão abaixo da área visível */
+@media (orientation: landscape) and (max-height: 700px) {
+  #game,
+  #world,
+  .area,
+  #nightToDay,
+  #dayArea,
+  #dayToSunset {
+    height: 100vh !important;
+  }
+}
+
