@@ -124,6 +124,7 @@
 <!-- TELA DA MISSÃO -->
 <div id="missionScreen">
   <div class="missionBox">
+    <button id="missionCloseBtn" type="button" aria-label="Fechar instruções">×</button>
 
     <span class="missionMini">antes de começar...</span>
 
@@ -742,6 +743,22 @@
 
 
 
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const missionCloseBtn = document.getElementById("missionCloseBtn");
+  const missionScreen = document.getElementById("missionScreen");
+  const startScreen = document.getElementById("startScreen");
+
+  if (missionCloseBtn) {
+    missionCloseBtn.addEventListener("click", function() {
+      if (missionScreen) missionScreen.classList.remove("show");
+      if (startScreen) startScreen.classList.remove("hide");
+    });
+  }
+});
+</script>
 
 </body>
 </html>
