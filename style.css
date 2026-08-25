@@ -3625,91 +3625,61 @@ body {
    Eles NÃO fazem parte do viewport virtual. */
 
 /* ============================================================
-   CORREÇÃO: INSTRUÇÕES NO CELULAR DEITADO
+   CONTROLES MOBILE — MAIS CONFORTÁVEIS
 ============================================================ */
 
-.missionBox {
-  position: relative;
+#controls {
+  bottom: max(14px, env(safe-area-inset-bottom)) !important;
+  padding-left: max(18px, env(safe-area-inset-left)) !important;
+  padding-right: max(18px, env(safe-area-inset-right)) !important;
+  align-items: flex-end;
 }
 
-#missionCloseBtn {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-
-  width: 34px;
-  height: 34px;
-
-  border: 0;
-  border-radius: 50%;
-
-  background: rgba(255,255,255,.10);
-  color: white;
-
-  font-size: 24px;
-  line-height: 1;
-
-  cursor: pointer;
-
-  z-index: 5;
+.left-controls {
+  gap: 10px !important;
 }
 
-@media (orientation: landscape) and (max-height: 700px) {
-  #missionScreen {
-    align-items: flex-start !important;
-    overflow-y: auto !important;
-    padding: 8px !important;
+#controls button {
+  width: 78px !important;
+  height: 78px !important;
+  border-width: 2px !important;
+  background: rgba(8, 12, 24, .48) !important;
+  font-size: 29px !important;
+  touch-action: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+  transition:
+    transform .08s ease,
+    background .08s ease,
+    opacity .08s ease !important;
+}
+
+#jumpBtn {
+  width: 84px !important;
+  height: 84px !important;
+}
+
+#controls button.pressed,
+#controls button:active {
+  transform: scale(.90) !important;
+  background: rgba(255,255,255,.24) !important;
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  #controls {
+    bottom: 8px !important;
   }
 
-  .missionBox {
-    margin: 8px auto !important;
-    max-height: none !important;
-    min-height: 0 !important;
-
-    width: min(620px, 84vw) !important;
-
-    padding:
-      14px
-      22px
-      16px !important;
+  #controls button {
+    width: 68px !important;
+    height: 68px !important;
+    font-size: 25px !important;
   }
 
-  .missionBox h2 {
-    margin-top: 0 !important;
-    font-size: 24px !important;
-  }
-
-  .missionIntro {
-    margin-bottom: 10px !important;
-    font-size: 13px !important;
-  }
-
-  .missionGoals {
-    gap: 7px !important;
-    margin-bottom: 12px !important;
-  }
-
-  .missionGoal {
-    padding: 7px 10px !important;
-  }
-
-  .missionGoal p {
-    font-size: 12px !important;
-  }
-
-  #beginAdventureBtn {
-    display: block !important;
-    position: sticky;
-    bottom: 0;
-
-    width: 100% !important;
-
-    padding: 10px !important;
-    margin-top: 8px !important;
-
-    font-size: 12px !important;
-
-    z-index: 4;
+  #jumpBtn {
+    width: 74px !important;
+    height: 74px !important;
   }
 }
 
