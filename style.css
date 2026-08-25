@@ -3624,3 +3624,17 @@ body {
 /* Menu inicial e missão continuam responsivos no tamanho REAL da tela.
    Eles NÃO fazem parte do viewport virtual. */
 
+/* MULTITOUCH MOBILE - controles independentes */
+#controls,
+#controls button {
+  touch-action: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+#controls button {
+  position: relative;
+  z-index: 10001;
+}
+

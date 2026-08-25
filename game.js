@@ -367,104 +367,151 @@ document.addEventListener(
 
 
 /* CONTROLES MOBILE MULTITOQUE
-   Cada botão acompanha o próprio dedo.
-   Soltar o pulo NÃO cancela esquerda/direita. */
+   Touch Events separados por botão.
+   Isso permite segurar direção + pular com outro dedo. */
 
-const leftPointers = new Set();
-const rightPointers = new Set();
+let touchLeft = false;
+let touchRight = false;
 
 
-function updateTouchMovement() {
-  movingLeft =
-    leftPointers.size > 0;
-
-  movingRight =
-    rightPointers.size > 0;
+function syncTouchMovement() {
+  movingLeft = touchLeft;
+  movingRight = touchRight;
 }
 
 
-function bindHoldButton(
-  button,
-  pointerSet
-) {
+function bindTouchHold(button, side) {
 
   if (!button) return;
 
   button.addEventListener(
-    "pointerdown",
+    "touchstart",
     function(e) {
 
       e.preventDefault();
 
-      pointerSet.add(
-        e.pointerId
-      );
+      if (side === "left") {
+        touchLeft = true;
+      }
 
-      updateTouchMovement();
+      if (side === "right") {
+        touchRight = true;
+      }
 
-      try {
-        button.setPointerCapture(
-          e.pointerId
-        );
-      } catch (err) {}
+      syncTouchMovement();
 
-    }
+    },
+    { passive: false }
   );
 
 
-  function releasePointer(e) {
+  function endTouch(e) {
 
-    pointerSet.delete(
-      e.pointerId
-    );
+    e.preventDefault();
 
-    updateTouchMovement();
+    if (side === "left") {
+      touchLeft = false;
+    }
+
+    if (side === "right") {
+      touchRight = false;
+    }
+
+    syncTouchMovement();
 
   }
 
 
   button.addEventListener(
+    "touchend",
+    endTouch,
+    { passive: false }
+  );
+
+  button.addEventListener(
+    "touchcancel",
+    endTouch,
+    { passive: false }
+  );
+
+
+  /* Mouse/trackpad no PC */
+  button.addEventListener(
+    "pointerdown",
+    function(e) {
+
+      if (e.pointerType !== "mouse") {
+        return;
+      }
+
+      e.preventDefault();
+
+      if (side === "left") {
+        touchLeft = true;
+      }
+
+      if (side === "right") {
+        touchRight = true;
+      }
+
+      syncTouchMovement();
+
+    }
+  );
+
+  button.addEventListener(
     "pointerup",
-    releasePointer
-  );
+    function(e) {
 
-  button.addEventListener(
-    "pointercancel",
-    releasePointer
-  );
+      if (e.pointerType !== "mouse") {
+        return;
+      }
 
-  button.addEventListener(
-    "lostpointercapture",
-    releasePointer
+      if (side === "left") {
+        touchLeft = false;
+      }
+
+      if (side === "right") {
+        touchRight = false;
+      }
+
+      syncTouchMovement();
+
+    }
   );
 
 }
 
 
-bindHoldButton(
-  leftBtn,
-  leftPointers
-);
-
-bindHoldButton(
-  rightBtn,
-  rightPointers
-);
+bindTouchHold(leftBtn, "left");
+bindTouchHold(rightBtn, "right");
 
 
 if (jumpBtn) {
 
   jumpBtn.addEventListener(
-    "pointerdown",
+    "touchstart",
     function(e) {
 
       e.preventDefault();
 
-      /*
-        O pulo é independente dos botões
-        de movimento, então dá para andar
-        e pular ao mesmo tempo.
-      */
+      jump();
+
+    },
+    { passive: false }
+  );
+
+
+  jumpBtn.addEventListener(
+    "pointerdown",
+    function(e) {
+
+      if (e.pointerType !== "mouse") {
+        return;
+      }
+
+      e.preventDefault();
+
       jump();
 
     }
@@ -474,15 +521,15 @@ if (jumpBtn) {
 
 
 /* Se o navegador perder foco,
-   limpa os dedos ativos. */
+   limpa os controles ativos. */
 window.addEventListener(
   "blur",
   function() {
 
-    leftPointers.clear();
-    rightPointers.clear();
+    touchLeft = false;
+    touchRight = false;
 
-    updateTouchMovement();
+    syncTouchMovement();
 
   }
 );
@@ -1085,16 +1132,32 @@ function checkKey() {
   const keyBottom =
     parseFloat(secretKey.style.bottom) || 405;
 
-  const keyWidth = 65;
-  const keyHeight = 65;
+  const keyCenterX =
+    keyLeft + 32.5;
 
-  const touching =
-    p.right > keyLeft &&
-    p.left < keyLeft + keyWidth &&
-    p.top > keyBottom &&
-    p.bottom < keyBottom + keyHeight;
+  const keyCenterY =
+    keyBottom + 32.5;
 
-  if (touching) {
+  const playerCenterX =
+    (p.left + p.right) / 2;
+
+  const playerCenterY =
+    (p.bottom + p.top) / 2;
+
+  /*
+    Área de coleta propositalmente generosa.
+    Continua em coordenadas do mundo, então o zoom da tela
+    não interfere.
+  */
+  const closeEnough =
+    Math.abs(
+      playerCenterX - keyCenterX
+    ) <= 105 &&
+    Math.abs(
+      playerCenterY - keyCenterY
+    ) <= 125;
+
+  if (closeEnough) {
 
     hasKey = true;
 
@@ -1103,7 +1166,9 @@ function checkKey() {
     );
 
     updateHUD();
+
   }
+
 }
 
 
@@ -2111,17 +2176,28 @@ function checkBirdCollision() {
   for (const bird of birds) {
 
     const birdLeft =
-      parseFloat(bird.style.left) ||
-      Number(bird.dataset.start);
+      parseFloat(bird.style.left);
 
     const birdBottom =
       Number(bird.dataset.bottom);
 
+    if (
+      Number.isNaN(birdLeft) ||
+      Number.isNaN(birdBottom)
+    ) {
+      continue;
+    }
+
+    /*
+      Hitbox em coordenadas do MUNDO.
+      Um pouco maior para a colisão acompanhar melhor
+      o emoji do pássaro no celular.
+    */
     const b = {
-      left: birdLeft + 8,
-      right: birdLeft + 50,
-      bottom: birdBottom + 5,
-      top: birdBottom + 43
+      left: birdLeft - 12,
+      right: birdLeft + 70,
+      bottom: birdBottom - 12,
+      top: birdBottom + 62
     };
 
     const touched =
@@ -2136,13 +2212,19 @@ function checkBirdCollision() {
 
       respawn();
 
-      setTimeout(function() {
-        birdHitCooldown = false;
-      }, 1000);
+      setTimeout(
+        function() {
+          birdHitCooldown = false;
+        },
+        1000
+      );
 
       return;
+
     }
+
   }
+
 }
 
 
