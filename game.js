@@ -366,38 +366,126 @@ document.addEventListener(
 );
 
 
-leftBtn.onpointerdown =
+/* CONTROLES MOBILE MULTITOQUE
+   Cada botão acompanha o próprio dedo.
+   Soltar o pulo NÃO cancela esquerda/direita. */
+
+const leftPointers = new Set();
+const rightPointers = new Set();
+
+
+function updateTouchMovement() {
+  movingLeft =
+    leftPointers.size > 0;
+
+  movingRight =
+    rightPointers.size > 0;
+}
+
+
+function bindHoldButton(
+  button,
+  pointerSet
+) {
+
+  if (!button) return;
+
+  button.addEventListener(
+    "pointerdown",
+    function(e) {
+
+      e.preventDefault();
+
+      pointerSet.add(
+        e.pointerId
+      );
+
+      updateTouchMovement();
+
+      try {
+        button.setPointerCapture(
+          e.pointerId
+        );
+      } catch (err) {}
+
+    }
+  );
+
+
+  function releasePointer(e) {
+
+    pointerSet.delete(
+      e.pointerId
+    );
+
+    updateTouchMovement();
+
+  }
+
+
+  button.addEventListener(
+    "pointerup",
+    releasePointer
+  );
+
+  button.addEventListener(
+    "pointercancel",
+    releasePointer
+  );
+
+  button.addEventListener(
+    "lostpointercapture",
+    releasePointer
+  );
+
+}
+
+
+bindHoldButton(
+  leftBtn,
+  leftPointers
+);
+
+bindHoldButton(
+  rightBtn,
+  rightPointers
+);
+
+
+if (jumpBtn) {
+
+  jumpBtn.addEventListener(
+    "pointerdown",
+    function(e) {
+
+      e.preventDefault();
+
+      /*
+        O pulo é independente dos botões
+        de movimento, então dá para andar
+        e pular ao mesmo tempo.
+      */
+      jump();
+
+    }
+  );
+
+}
+
+
+/* Se o navegador perder foco,
+   limpa os dedos ativos. */
+window.addEventListener(
+  "blur",
   function() {
 
-    movingLeft = true;
+    leftPointers.clear();
+    rightPointers.clear();
 
-  };
+    updateTouchMovement();
 
-
-rightBtn.onpointerdown =
-  function() {
-
-    movingRight = true;
-
-  };
-
-
-document.onpointerup =
-  function() {
-
-    movingLeft = false;
-
-    movingRight = false;
-
-  };
-
-
-jumpBtn.onpointerdown =
-  function() {
-
-    jump();
-
-  };
+  }
+);
 
 
 /* =====================
@@ -986,39 +1074,36 @@ function checkKey() {
     hasKey ||
     !secretKey
   ) {
-
     return;
-
   }
 
+  const p = playerBox();
 
-  const p =
-    player.getBoundingClientRect();
+  const keyLeft =
+    parseFloat(secretKey.style.left) || 3062;
 
+  const keyBottom =
+    parseFloat(secretKey.style.bottom) || 405;
 
-  const k =
-    secretKey.getBoundingClientRect();
+  const keyWidth = 65;
+  const keyHeight = 65;
 
+  const touching =
+    p.right > keyLeft &&
+    p.left < keyLeft + keyWidth &&
+    p.top > keyBottom &&
+    p.bottom < keyBottom + keyHeight;
 
-  if (
-    p.left + 130 < k.right &&
-    p.right - 130 > k.left &&
-    p.top + 100 < k.bottom &&
-    p.bottom - 30 > k.top
-  ) {
+  if (touching) {
 
     hasKey = true;
-
 
     secretKey.classList.add(
       "collected"
     );
 
-
     updateHUD();
-
   }
-
 }
 
 
@@ -1981,6 +2066,33 @@ function updateBirds(time) {
 }
 
 
+
+
+/*
+  Loop próprio das aves.
+  Assim elas continuam voando mesmo quando o gameLoop
+  entra em algum retorno antecipado.
+*/
+function birdAnimationLoop(time) {
+
+  if (
+    !beachMode &&
+    !finalDoorEntered
+  ) {
+    updateBirds(time);
+  }
+
+  requestAnimationFrame(
+    birdAnimationLoop
+  );
+
+}
+
+requestAnimationFrame(
+  birdAnimationLoop
+);
+
+
 /* =====================
    COLISÃO COM AVES
 ===================== */
@@ -1994,69 +2106,45 @@ function checkBirdCollision() {
     return;
   }
 
-
-  const p =
-    player.getBoundingClientRect();
-
+  const p = playerBox();
 
   for (const bird of birds) {
 
-    const b =
-      bird.getBoundingClientRect();
+    const birdLeft =
+      parseFloat(bird.style.left) ||
+      Number(bird.dataset.start);
 
+    const birdBottom =
+      Number(bird.dataset.bottom);
 
-    /*
-      Hitbox propositalmente
-      menor para não ficar injusto
-    */
+    const b = {
+      left: birdLeft + 8,
+      right: birdLeft + 50,
+      bottom: birdBottom + 5,
+      top: birdBottom + 43
+    };
 
     const touched =
-
-      p.left + 130 <
-      b.right - 8 &&
-
-      p.right - 130 >
-      b.left + 8 &&
-
-      p.top + 100 <
-      b.bottom - 5 &&
-
-      p.bottom - 40 >
-      b.top + 5;
-
+      p.right > b.left &&
+      p.left < b.right &&
+      p.top > b.bottom &&
+      p.bottom < b.top;
 
     if (touched) {
 
       birdHitCooldown = true;
 
-
-      /*
-        Volta para o último
-        checkpoint ativado
-      */
-
       respawn();
 
-
-      /*
-        1 segundo de proteção
-        depois do respawn
-      */
-
       setTimeout(function() {
-
         birdHitCooldown = false;
-
       }, 1000);
 
-
       return;
-
     }
-
   }
-
 }
+
 
 /* =====================
    NUVEM MÓVEL
@@ -2204,21 +2292,11 @@ function revealFinalDoor() {
 
 function finalDoorBox() {
 
-  /*
-    A porta fica apoiada em cima
-    da última plataforma temporária.
-
-    A hitbox é menor que a imagem
-    para a entrada não acontecer
-    de longe.
-  */
-
   return {
-    left: 8410,
-    right: 8490,
-
+    left: 8400,
+    right: 8600,
     bottom: 380,
-    top: 520
+    top: 650
   };
 
 }
@@ -3355,8 +3433,6 @@ function gameLoop() {
 
 
 /* AVES */
-
-updateBirds(performance.now());
 
 checkBirdCollision();
 
