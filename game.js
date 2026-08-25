@@ -124,6 +124,12 @@ const VIRTUAL_WIDTH = 1600;
 const VIRTUAL_HEIGHT = 720;
 
 const speed = 6;
+
+function currentMoveSpeed() {
+  return window.matchMedia("(pointer: coarse)").matches
+    ? 5.2
+    : speed;
+}
 const gravity = 1;
 
 const jumpForce = 22;
@@ -366,173 +372,138 @@ document.addEventListener(
 );
 
 
-/* CONTROLES MOBILE MULTITOQUE
-   Touch Events separados por botão.
-   Isso permite segurar direção + pular com outro dedo. */
+/* CONTROLES MOBILE — JOGABILIDADE MELHORADA
+   multitouch real + último lado tocado tem prioridade */
 
-let touchLeft = false;
-let touchRight = false;
+const activeTouchIds = {
+  left: new Set(),
+  right: new Set()
+};
 
+let lastTouchDirection = null;
 
-function syncTouchMovement() {
-  movingLeft = touchLeft;
-  movingRight = touchRight;
-}
+function syncMobileDirection() {
+  const leftHeld = activeTouchIds.left.size > 0;
+  const rightHeld = activeTouchIds.right.size > 0;
 
-
-function bindTouchHold(button, side) {
-
-  if (!button) return;
-
-  button.addEventListener(
-    "touchstart",
-    function(e) {
-
-      e.preventDefault();
-
-      if (side === "left") {
-        touchLeft = true;
-      }
-
-      if (side === "right") {
-        touchRight = true;
-      }
-
-      syncTouchMovement();
-
-    },
-    { passive: false }
-  );
-
-
-  function endTouch(e) {
-
-    e.preventDefault();
-
-    if (side === "left") {
-      touchLeft = false;
-    }
-
-    if (side === "right") {
-      touchRight = false;
-    }
-
-    syncTouchMovement();
-
+  if (leftHeld && rightHeld) {
+    movingLeft = lastTouchDirection === "left";
+    movingRight = lastTouchDirection === "right";
+    return;
   }
 
-
-  button.addEventListener(
-    "touchend",
-    endTouch,
-    { passive: false }
-  );
-
-  button.addEventListener(
-    "touchcancel",
-    endTouch,
-    { passive: false }
-  );
-
-
-  /* Mouse/trackpad no PC */
-  button.addEventListener(
-    "pointerdown",
-    function(e) {
-
-      if (e.pointerType !== "mouse") {
-        return;
-      }
-
-      e.preventDefault();
-
-      if (side === "left") {
-        touchLeft = true;
-      }
-
-      if (side === "right") {
-        touchRight = true;
-      }
-
-      syncTouchMovement();
-
-    }
-  );
-
-  button.addEventListener(
-    "pointerup",
-    function(e) {
-
-      if (e.pointerType !== "mouse") {
-        return;
-      }
-
-      if (side === "left") {
-        touchLeft = false;
-      }
-
-      if (side === "right") {
-        touchRight = false;
-      }
-
-      syncTouchMovement();
-
-    }
-  );
-
+  movingLeft = leftHeld;
+  movingRight = rightHeld;
 }
 
+function bindDirectionButton(button, direction) {
+  if (!button) return;
 
-bindTouchHold(leftBtn, "left");
-bindTouchHold(rightBtn, "right");
+  const set = activeTouchIds[direction];
 
+  button.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+
+    for (const touch of e.changedTouches) {
+      set.add(touch.identifier);
+    }
+
+    lastTouchDirection = direction;
+    syncMobileDirection();
+    button.classList.add("pressed");
+  }, { passive: false });
+
+  function endTouches(e) {
+    e.preventDefault();
+
+    for (const touch of e.changedTouches) {
+      set.delete(touch.identifier);
+    }
+
+    button.classList.toggle("pressed", set.size > 0);
+
+    if (set.size === 0 && lastTouchDirection === direction) {
+      const other = direction === "left" ? "right" : "left";
+
+      if (activeTouchIds[other].size > 0) {
+        lastTouchDirection = other;
+      }
+    }
+
+    syncMobileDirection();
+  }
+
+  button.addEventListener("touchend", endTouches, { passive: false });
+  button.addEventListener("touchcancel", endTouches, { passive: false });
+
+  button.addEventListener("mousedown", function(e) {
+    e.preventDefault();
+    set.add("mouse");
+    lastTouchDirection = direction;
+    syncMobileDirection();
+    button.classList.add("pressed");
+  });
+
+  button.addEventListener("mouseup", function() {
+    set.delete("mouse");
+    button.classList.remove("pressed");
+    syncMobileDirection();
+  });
+
+  button.addEventListener("mouseleave", function() {
+    if (set.has("mouse")) {
+      set.delete("mouse");
+      button.classList.remove("pressed");
+      syncMobileDirection();
+    }
+  });
+}
+
+bindDirectionButton(leftBtn, "left");
+bindDirectionButton(rightBtn, "right");
 
 if (jumpBtn) {
+  jumpBtn.addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    jumpBtn.classList.add("pressed");
+    jump();
+  }, { passive: false });
 
-  jumpBtn.addEventListener(
-    "touchstart",
-    function(e) {
+  jumpBtn.addEventListener("touchend", function(e) {
+    e.preventDefault();
+    jumpBtn.classList.remove("pressed");
+  }, { passive: false });
 
-      e.preventDefault();
+  jumpBtn.addEventListener("touchcancel", function() {
+    jumpBtn.classList.remove("pressed");
+  });
 
-      jump();
+  jumpBtn.addEventListener("mousedown", function(e) {
+    e.preventDefault();
+    jumpBtn.classList.add("pressed");
+    jump();
+  });
 
-    },
-    { passive: false }
-  );
-
-
-  jumpBtn.addEventListener(
-    "pointerdown",
-    function(e) {
-
-      if (e.pointerType !== "mouse") {
-        return;
-      }
-
-      e.preventDefault();
-
-      jump();
-
-    }
-  );
-
+  jumpBtn.addEventListener("mouseup", function() {
+    jumpBtn.classList.remove("pressed");
+  });
 }
 
 
 /* Se o navegador perder foco,
-   limpa os controles ativos. */
-window.addEventListener(
-  "blur",
-  function() {
+   limpa todos os botões. */
+window.addEventListener("blur", function() {
+  activeTouchIds.left.clear();
+  activeTouchIds.right.clear();
 
-    touchLeft = false;
-    touchRight = false;
+  lastTouchDirection = null;
+  movingLeft = false;
+  movingRight = false;
 
-    syncTouchMovement();
-
-  }
-);
+  if (leftBtn) leftBtn.classList.remove("pressed");
+  if (rightBtn) rightBtn.classList.remove("pressed");
+  if (jumpBtn) jumpBtn.classList.remove("pressed");
+});
 
 
 /* =====================
@@ -1132,32 +1103,16 @@ function checkKey() {
   const keyBottom =
     parseFloat(secretKey.style.bottom) || 405;
 
-  const keyCenterX =
-    keyLeft + 32.5;
+  const keyWidth = 65;
+  const keyHeight = 65;
 
-  const keyCenterY =
-    keyBottom + 32.5;
+  const touching =
+    p.right > keyLeft &&
+    p.left < keyLeft + keyWidth &&
+    p.top > keyBottom &&
+    p.bottom < keyBottom + keyHeight;
 
-  const playerCenterX =
-    (p.left + p.right) / 2;
-
-  const playerCenterY =
-    (p.bottom + p.top) / 2;
-
-  /*
-    Área de coleta propositalmente generosa.
-    Continua em coordenadas do mundo, então o zoom da tela
-    não interfere.
-  */
-  const closeEnough =
-    Math.abs(
-      playerCenterX - keyCenterX
-    ) <= 105 &&
-    Math.abs(
-      playerCenterY - keyCenterY
-    ) <= 125;
-
-  if (closeEnough) {
+  if (touching) {
 
     hasKey = true;
 
@@ -1166,9 +1121,7 @@ function checkKey() {
     );
 
     updateHUD();
-
   }
-
 }
 
 
@@ -2176,28 +2129,17 @@ function checkBirdCollision() {
   for (const bird of birds) {
 
     const birdLeft =
-      parseFloat(bird.style.left);
+      parseFloat(bird.style.left) ||
+      Number(bird.dataset.start);
 
     const birdBottom =
       Number(bird.dataset.bottom);
 
-    if (
-      Number.isNaN(birdLeft) ||
-      Number.isNaN(birdBottom)
-    ) {
-      continue;
-    }
-
-    /*
-      Hitbox em coordenadas do MUNDO.
-      Um pouco maior para a colisão acompanhar melhor
-      o emoji do pássaro no celular.
-    */
     const b = {
-      left: birdLeft - 12,
-      right: birdLeft + 70,
-      bottom: birdBottom - 12,
-      top: birdBottom + 62
+      left: birdLeft + 8,
+      right: birdLeft + 50,
+      bottom: birdBottom + 5,
+      top: birdBottom + 43
     };
 
     const touched =
@@ -2212,19 +2154,13 @@ function checkBirdCollision() {
 
       respawn();
 
-      setTimeout(
-        function() {
-          birdHitCooldown = false;
-        },
-        1000
-      );
+      setTimeout(function() {
+        birdHitCooldown = false;
+      }, 1000);
 
       return;
-
     }
-
   }
-
 }
 
 
@@ -3033,7 +2969,7 @@ function gameLoop() {
   if (movingRight) {
 
     positionX +=
-      speed;
+      currentMoveSpeed();
 
 
     player.style.transform =
@@ -3045,7 +2981,7 @@ function gameLoop() {
   if (movingLeft) {
 
     positionX -=
-      speed;
+      currentMoveSpeed();
 
 
     player.style.transform =
