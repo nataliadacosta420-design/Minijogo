@@ -2454,10 +2454,14 @@ function startBeachScene() {
   }
 
   /*
-    Nada de texto imediato.
-    Ela entra, olha a praia e pode andar.
-    O aviso só aparece quando chega perto da caixa.
+    Assim que entra pela porta, já aparece uma orientação.
+    Quando chega perto da caixa, o texto muda para o clique.
   */
+  if (beachIntro) {
+    beachIntro.innerHTML =
+      "<span>Vá até a caixa →</span>";
+    beachIntro.classList.add("show");
+  }
 }
 
 function makeFlyingFlower(isLast = false) {
@@ -2573,6 +2577,8 @@ function updateBeachPlayer() {
     isBeachPlayerNearBox()
   ) {
     if (beachIntro) {
+      beachIntro.innerHTML =
+        "<span>Clique na caixa para colocar os girassóis 🌻</span>";
       beachIntro.classList.add("show");
     }
 
@@ -2582,8 +2588,13 @@ function updateBeachPlayer() {
 
     beachHintShown = true;
   } else if (!depositingFlowers) {
-    if (beachIntro) {
-      beachIntro.classList.remove("show");
+    if (
+      beachIntro &&
+      !finalFlowersDelivered
+    ) {
+      beachIntro.innerHTML =
+        "<span>Vá até a caixa →</span>";
+      beachIntro.classList.add("show");
     }
 
     if (flowerDropBox) {
@@ -2716,7 +2727,7 @@ function finishFlowerDeposit() {
     if (natSpeech) {
       natSpeech.classList.remove("show");
     }
-  }, 5700);
+  }, 6000);
 
   /* Isso é pra você. */
   setTimeout(function() {
@@ -2724,16 +2735,16 @@ function finishFlowerDeposit() {
       natSpeech.textContent = "Isso é pra você.";
       natSpeech.classList.add("show");
     }
-  }, 6200);
+  }, 6500);
 
   setTimeout(function() {
     if (natSpeech) {
       natSpeech.classList.remove("show");
     }
-  }, 7700);
+  }, 8300);
 
   /* E acabou: buquê grandão brilhando com as duas juntas. */
-  setTimeout(showFinalBouquet, 8200);
+  setTimeout(showFinalBouquet, 8800);
 }
 
 
@@ -3785,6 +3796,49 @@ if (missionCloseBtn) {
       }
 
       document.body.classList.add("menu-open");
+    }
+  );
+}
+
+
+/* =====================================================
+   AVISO DE ORIENTAÇÃO APÓS AS INSTRUÇÕES
+===================================================== */
+const rotateNotice =
+  document.getElementById("rotateNotice");
+
+const rotateContinueBtn =
+  document.getElementById("rotateContinueBtn");
+
+let rotateNoticeAccepted = false;
+
+if (beginAdventureBtn && rotateNotice) {
+  beginAdventureBtn.addEventListener(
+    "click",
+    function(e) {
+      if (rotateNoticeAccepted) return;
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      rotateNotice.classList.add("show");
+      rotateNotice.setAttribute("aria-hidden", "false");
+    },
+    true
+  );
+}
+
+if (rotateContinueBtn && rotateNotice) {
+  rotateContinueBtn.addEventListener(
+    "click",
+    function() {
+      rotateNoticeAccepted = true;
+
+      rotateNotice.classList.remove("show");
+      rotateNotice.setAttribute("aria-hidden", "true");
+
+      /* Continua usando o fluxo original do jogo. */
+      beginAdventureBtn.click();
     }
   );
 }
