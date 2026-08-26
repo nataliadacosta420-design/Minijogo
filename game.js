@@ -2459,7 +2459,7 @@ function startBeachScene() {
   */
   if (beachIntro) {
     beachIntro.innerHTML =
-      "<span>Vá até a caixa →</span>";
+      "<span>Clique na caixa →</span>";
     beachIntro.classList.add("show");
   }
 }
