@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <title>Mini game</title>
+  <title>Jogo dos Girassóis</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -101,7 +101,7 @@
               <p>Coisinha</p>
 
               <span class="tinyLabel">descrição</span>
-              <p>linda, engraçada, inteligente, majestosa, charmosa e gostosa.</p>
+              <p>linda, engraçada, inteligente, majestosa, charmosa, delicada e gostosa.</p>
             </div>
           </div>
 
@@ -124,7 +124,7 @@
 <!-- TELA DA MISSÃO -->
 <div id="missionScreen">
   <div class="missionBox">
-    <button id="missionCloseBtn" type="button" aria-label="Fechar instruções">×</button>
+    <button id="missionCloseBtn" type="button" aria-label="Voltar ao início">×</button>
 
     <span class="missionMini">antes de começar...</span>
 
@@ -743,22 +743,6 @@
 
 
 
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const missionCloseBtn = document.getElementById("missionCloseBtn");
-  const missionScreen = document.getElementById("missionScreen");
-  const startScreen = document.getElementById("startScreen");
-
-  if (missionCloseBtn) {
-    missionCloseBtn.addEventListener("click", function() {
-      if (missionScreen) missionScreen.classList.remove("show");
-      if (startScreen) startScreen.classList.remove("hide");
-    });
-  }
-});
-</script>
 
 </body>
 </html>

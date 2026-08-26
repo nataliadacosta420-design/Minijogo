@@ -3766,3 +3766,25 @@ document
     );
 
   });
+
+
+/* X DA TELA DE MISSÃO */
+const missionCloseBtn =
+  document.getElementById("missionCloseBtn");
+
+if (missionCloseBtn) {
+  missionCloseBtn.addEventListener(
+    "click",
+    function() {
+      if (missionScreen) {
+        missionScreen.classList.remove("show");
+      }
+
+      if (startScreen) {
+        startScreen.classList.remove("hide");
+      }
+
+      document.body.classList.add("menu-open");
+    }
+  );
+}
