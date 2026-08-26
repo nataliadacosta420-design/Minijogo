@@ -2593,7 +2593,7 @@ function updateBeachPlayer() {
       !finalFlowersDelivered
     ) {
       beachIntro.innerHTML =
-        "<span>Vá até a caixa →</span>";
+        "<span>Clique ns caixa →</span>";
       beachIntro.classList.add("show");
     }
 
